@@ -3,6 +3,8 @@ package com.models;
 import java.util.ArrayList;
 
 public class Product {
+	
+	// 15 used, 1 unused
 
 	private int productID;
 	private String name;
@@ -16,8 +18,11 @@ public class Product {
 	private ArrayList<String> images;
 
 	private int categoryID;
+	private String categoryName;
 	private int showRoomID;
+	private String showRoomName;
 	private int brandID;
+	private String brandName;
 
 	public Product() {
 		this.productID = 0;
@@ -30,15 +35,19 @@ public class Product {
 		this.numRatingUsers = 0;
 		this.isDayProd = false;
 		this.images = new ArrayList<String>();
+
 		this.categoryID = 0;
+		this.categoryName = "";
 		this.showRoomID = 0;
+		this.showRoomName = "";
 		this.brandID = 0;
+		this.brandName = "";
 	}
 
 	public Product(int productID, String name, String description, String image, int quantity, double price,
 			double rating, int numRatingUsers, boolean isDayProd, ArrayList<String> images, int categoryID,
-			int showRoomID, int brandID) {
-		super();
+			String categoryName, int showRoomID, String showRoomName, int brandID, String brandName) {
+
 		this.productID = productID;
 		this.name = name;
 		this.description = description;
@@ -49,9 +58,13 @@ public class Product {
 		this.numRatingUsers = numRatingUsers;
 		this.isDayProd = isDayProd;
 		this.images = images;
+
 		this.categoryID = categoryID;
+		this.categoryName = categoryName;
 		this.showRoomID = showRoomID;
+		this.showRoomName = showRoomName;
 		this.brandID = brandID;
+		this.brandName = brandName;
 	}
 
 	public int getProductID() {
@@ -156,6 +169,30 @@ public class Product {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
+	public String getShowRoomName() {
+		return showRoomName;
+	}
+
+	public void setShowRoomName(String showRoomName) {
+		this.showRoomName = showRoomName;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
 	}
 
 }

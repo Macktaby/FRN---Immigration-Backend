@@ -16,6 +16,30 @@ public class ProductBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
+	private Product parseProduct(ResultSet rs) throws SQLException {
+
+		Product product = new Product();
+
+		product.setProductID(rs.getInt("product_id"));
+		product.setName(rs.getString("name"));
+		product.setDescription(rs.getString("desc"));
+		product.setImage(rs.getString("image"));
+		product.setQuantity(rs.getInt("quantity"));
+		product.setPrice(rs.getDouble("price"));
+		product.setRating(rs.getDouble("rating"));
+		product.setNumRatingUsers(rs.getInt("n_ratings"));
+		product.setDayProd(rs.getBoolean("is_day_prod"));
+
+		product.setCategoryID(rs.getInt("category_id"));
+		product.setCategoryName(rs.getString("category_name"));
+		product.setShowRoomID(rs.getInt("showroom_id"));
+		product.setShowRoomName(rs.getString("showroom_name"));
+		product.setBrandID(rs.getInt("brand_id"));
+		product.setBrandName(rs.getString("brand_name"));
+
+		return product;
+	}
+
 	public ArrayList<Product> getProductsOfTheDay() {
 
 		try {
@@ -38,25 +62,100 @@ public class ProductBean {
 		return null;
 	}
 
-	private Product parseProduct(ResultSet rs) throws SQLException {
+	public ArrayList<Product> getAllProducts() {
+		try {
+			String sql = "SELECT * FROM product";
 
-		Product product = new Product();
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
 
-		product.setProductID(rs.getInt("product_id"));
-		product.setName(rs.getString("name"));
-		product.setDescription(rs.getString("desc"));
-		product.setImage(rs.getString("image"));
-		product.setQuantity(rs.getInt("quantity"));
-		product.setPrice(rs.getDouble("price"));
-		product.setRating(rs.getDouble("rating"));
-		product.setNumRatingUsers(rs.getInt("n_ratings"));
-		product.setDayProd(rs.getBoolean("is_day_prod"));
+			ArrayList<Product> products = new ArrayList<Product>();
 
-		product.setCategoryID(rs.getInt("category_id"));
-		product.setShowRoomID(rs.getInt("showroom_id"));
-		product.setBrandID(rs.getInt("brand_id"));
+			while (rs.next())
+				products.add(parseProduct(rs));
 
-		return product;
+			return products;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<Product> getFilteredProducts(int brandID, int categoryID, int showRoomID) {
+		try {
+			int count = 0;
+			boolean selection[] = { false, false, false };
+			String sql = buildFilterSQL(brandID, categoryID, showRoomID, selection);
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			if (selection[0])
+				stmt.setInt(++count, brandID);
+			if (selection[1])
+				stmt.setInt(++count, categoryID);
+			if (selection[2])
+				stmt.setInt(++count, showRoomID);
+
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<Product> products = new ArrayList<Product>();
+
+			while (rs.next())
+				products.add(parseProduct(rs));
+
+			return products;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private String buildFilterSQL(int brandID, int categoryID, int showRoomID, boolean[] selection)
+			throws SQLException {
+
+		String sql = "SELECT * FROM product";
+		boolean flag = true;
+
+		if (brandID != 0) {
+			if (flag)
+				sql += " WHERE ";
+			else
+				sql += " AND ";
+
+			flag = false;
+
+			sql += "brand_id = ?";
+			selection[0] = true;
+		}
+
+		if (categoryID != 0) {
+			if (flag)
+				sql += " WHERE ";
+			else
+				sql += " AND ";
+
+			flag = false;
+
+			sql += "category_id = ?";
+			selection[1] = true;
+		}
+
+		if (showRoomID != 0) {
+			if (flag)
+				sql += " WHERE ";
+			else
+				sql += " AND ";
+
+			flag = false;
+			sql += "showroom_id = ?";
+			selection[2] = true;
+		}
+
+		return sql;
 	}
 
 }
