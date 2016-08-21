@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.Brand;
+import com.mysql.jdbc.Statement;
 
 public class BrandBean {
 
@@ -50,6 +51,34 @@ public class BrandBean {
 		}
 
 		return null;
+	}
+
+	public Brand addBrand(Brand brand) {
+		try {
+			String sql = "INSERT INTO `brand` (`name`, `desc`, `image`) VALUES (?,?,?);";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			stmt.setString(1, brand.getName());
+			stmt.setString(2, brand.getDescription());
+			stmt.setString(3, brand.getImage());
+
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				brand.setBrandID(rs.getInt(1));
+
+				return brand;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+
 	}
 
 }

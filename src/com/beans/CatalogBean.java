@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.Catalog;
+import com.mysql.jdbc.Statement;
 
 public class CatalogBean {
 
@@ -50,6 +51,35 @@ public class CatalogBean {
 		catalog.setPdfLink(rs.getString("pdf"));
 
 		return catalog;
+	}
+
+	public Catalog addCatalog(Catalog catalog) {
+
+		try {
+			String sql = "INSERT INTO `catalog` (`name`, `desc`, `date`, `pdf`) VALUES (?,?,?,?);";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			stmt.setString(1, catalog.getName());
+			stmt.setString(2, catalog.getDescription());
+			stmt.setTimestamp(3, catalog.getDate());
+			stmt.setString(4, catalog.getPdfLink());
+
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				catalog.setCatalogID(rs.getInt(1));
+				return catalog;
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

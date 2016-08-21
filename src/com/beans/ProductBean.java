@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.Product;
+import com.mysql.jdbc.Statement;
 
 public class ProductBean {
 
@@ -63,6 +64,7 @@ public class ProductBean {
 	}
 
 	public ArrayList<Product> getAllProducts() {
+
 		try {
 			String sql = "SELECT * FROM product";
 
@@ -84,6 +86,7 @@ public class ProductBean {
 	}
 
 	public ArrayList<Product> getFilteredProducts(int brandID, int categoryID, int showRoomID) {
+
 		try {
 			int count = 0;
 			boolean selection[] = { false, false, false };
@@ -156,6 +159,49 @@ public class ProductBean {
 		}
 
 		return sql;
+	}
+
+	public Product addProduct(Product product) {
+
+		try {
+			String sql = "INSERT INTO `product` "
+					+ "(`name`, `desc`, `image`, `quantity`, `price`, `rating`, `n_ratings`, "
+					+ "`is_day_prod`, `category_id`, `showroom_id`, `brand_id` , `category_name`, `showroom_name`, `brand_name`) "
+					+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			stmt.setString(1, product.getName());
+			stmt.setString(2, product.getDescription());
+			stmt.setString(3, product.getImage());
+			stmt.setInt(4, product.getQuantity());
+			stmt.setDouble(5, product.getPrice());
+			stmt.setDouble(6, product.getRating());
+			stmt.setInt(7, product.getNumRatingUsers());
+			stmt.setBoolean(8, product.isDayProd());
+			stmt.setInt(9, product.getCategoryID());
+			stmt.setInt(10, product.getShowRoomID());
+			stmt.setInt(11, product.getBrandID());
+			stmt.setString(12, product.getCategoryName());
+			stmt.setString(13, product.getShowRoomName());
+			stmt.setString(14, product.getBrandName());
+
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				product.setProductID(rs.getInt(1));
+
+				return product;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+
+		return null;
 	}
 
 }

@@ -3,7 +3,9 @@ package com.models;
 import java.util.ArrayList;
 
 public class Designer {
-
+	
+	// 9 used , 1 unused
+	
 	private int designerID;
 	private String name;
 	private String email;

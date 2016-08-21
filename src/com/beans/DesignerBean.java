@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.Designer;
-import com.models.Product;
-import com.models.User;
-import com.mysql.jdbc.Statement;
 
 public class DesignerBean {
 
@@ -19,9 +16,21 @@ public class DesignerBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
-	public Designer parseDesigner(ResultSet rs) {
+	public Designer parseDesigner(ResultSet rs) throws SQLException {
 
-		return null;
+		Designer designer = new Designer();
+
+		designer.setDesignerID(rs.getInt("designer_id"));
+		designer.setName(rs.getString("name"));
+		designer.setEmail(rs.getString("email"));
+		designer.setPhone(rs.getString("phone"));
+		designer.setAddress(rs.getString("address"));
+		designer.setWebsite(rs.getString("url"));
+		designer.setRating(rs.getDouble("rating"));
+		designer.setnRatingUsers(rs.getInt("n_ratings"));
+		designer.setProfileImage(rs.getString("profile_image"));
+
+		return designer;
 	}
 
 	public ArrayList<Designer> getDesigners() {
@@ -49,11 +58,11 @@ public class DesignerBean {
 
 	public ArrayList<Designer> getFilteredDesigners(String name) {
 		try {
-			String sql = "SELECT * FROM designer WHERE name = ?";
+			String sql = "SELECT * FROM designer WHERE name LIKE ?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1,"%"+ name + "%");
+			stmt.setString(1, "%" + name + "%");
 			ResultSet rs = stmt.executeQuery();
 
 			ArrayList<Designer> designers = new ArrayList<Designer>();
