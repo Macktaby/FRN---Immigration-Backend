@@ -1,6 +1,7 @@
 package com.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
 	
@@ -15,7 +16,7 @@ public class Product {
 	private double rating;
 	private int numRatingUsers;
 	private boolean isDayProd;
-	private ArrayList<String> images;
+	private List<String> images;
 
 	private int categoryID;
 	private String categoryName;
@@ -45,7 +46,7 @@ public class Product {
 	}
 
 	public Product(int productID, String name, String description, String image, int quantity, double price,
-			double rating, int numRatingUsers, boolean isDayProd, ArrayList<String> images, int categoryID,
+			double rating, int numRatingUsers, boolean isDayProd, List<String> images, int categoryID,
 			String categoryName, int showRoomID, String showRoomName, int brandID, String brandName) {
 
 		this.productID = productID;
@@ -123,7 +124,7 @@ public class Product {
 		this.numRatingUsers = numRatingUsers;
 	}
 
-	public ArrayList<String> getImages() {
+	public List<String> getImages() {
 		return images;
 	}
 

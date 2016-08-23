@@ -1,6 +1,7 @@
 package com.services;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -29,13 +30,13 @@ public class VendorServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addProduct(@FormParam("name") String name, @FormParam("desc") String desc,
 			@FormParam("image") String image, @FormParam("quantity") int quantity, @FormParam("price") double price,
-			@FormParam("isDayProd") boolean isDayProduct, @FormParam("catID") int categoryID,
-			@FormParam("catName") String categoryName, @FormParam("showroomID") int showroomID,
-			@FormParam("showroomName") String showroomName, @FormParam("brandID") int brandID,
-			@FormParam("brandName") String brandName) {
+			@FormParam("isDayProd") boolean isDayProduct, @FormParam("images") List<String> images,
+			@FormParam("catID") int categoryID, @FormParam("catName") String categoryName,
+			@FormParam("showroomID") int showroomID, @FormParam("showroomName") String showroomName,
+			@FormParam("brandID") int brandID, @FormParam("brandName") String brandName) {
 
-		Product product = createProduct(name, desc, image, quantity, price, isDayProduct, categoryID, categoryName,
-				showroomID, showroomName, brandID, brandName);
+		Product product = new Product(0, name, desc, image, quantity, price, 0, 0, isDayProduct, images, categoryID,
+				categoryName, showroomID, showroomName, brandID, brandName);
 
 		ProductBean pb = new ProductBean();
 		product = pb.addProduct(product);
@@ -43,29 +44,29 @@ public class VendorServices {
 		return JSONBuilder.convertProductToJSON(product).toJSONString();
 	}
 
-	private Product createProduct(String name, String desc, String image, int quantity, double price,
-			boolean isDayProduct, int categoryID, String categoryName, int showroomID, String showroomName, int brandID,
-			String brandName) {
+	@POST
+	@Path("/updateProduct")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateProduct(@FormParam("id") int id, @FormParam("name") String name, @FormParam("desc") String desc,
+			@FormParam("image") String image, @FormParam("quantity") int quantity, @FormParam("price") double price,
+			@FormParam("isDayProd") boolean isDayProduct, @FormParam("images") List<String> images,
+			@FormParam("catID") int categoryID, @FormParam("catName") String categoryName,
+			@FormParam("showroomID") int showroomID, @FormParam("showroomName") String showroomName,
+			@FormParam("brandID") int brandID, @FormParam("brandName") String brandName) {
 
-		Product product = new Product();
+		Product product = new Product(id, name, desc, image, quantity, price, 0, 0, isDayProduct, images, categoryID,
+				categoryName, showroomID, showroomName, brandID, brandName);
 
-		product.setName(name);
-		product.setDescription(desc);
-		product.setImage(image);
-		product.setQuantity(quantity);
-		product.setPrice(price);
-		product.setRating(0);
-		product.setNumRatingUsers(0);
-		product.setDayProd(isDayProduct);
+		ProductBean pb = new ProductBean();
+		return pb.updateProduct(product);
+	}
 
-		product.setCategoryID(categoryID);
-		product.setCategoryName(categoryName);
-		product.setShowRoomID(showroomID);
-		product.setShowRoomName(showroomName);
-		product.setBrandID(brandID);
-		product.setBrandName(brandName);
-
-		return product;
+	@POST
+	@Path("/deleteProduct")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteProduct(@FormParam("id") int productID) {
+		ProductBean pb = new ProductBean();
+		return pb.deleteProduct(productID);
 	}
 
 	/*************************** ShowRoom *********************************/
@@ -77,7 +78,7 @@ public class VendorServices {
 			@FormParam("address") String address, @FormParam("location") String location,
 			@FormParam("phone") String phone, @FormParam("image") String image) {
 
-		ShowRoom showroom = createShowRoom(name, desc, address, location, phone, image);
+		ShowRoom showroom = new ShowRoom(0, name, desc, address, location, phone, image);
 
 		ShowRoomBean sb = new ShowRoomBean();
 		showroom = sb.addShowRoom(showroom);
@@ -85,27 +86,37 @@ public class VendorServices {
 		return JSONBuilder.convertShowRoomToJSON(showroom).toJSONString();
 	}
 
-	private ShowRoom createShowRoom(String name, String desc, String address, String location, String phone,
-			String image) {
-		ShowRoom showroom = new ShowRoom();
+	@POST
+	@Path("/updateShowroom")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateShowRoom(@FormParam("id") int showroomID, @FormParam("name") String name,
+			@FormParam("desc") String desc, @FormParam("address") String address,
+			@FormParam("location") String location, @FormParam("phone") String phone,
+			@FormParam("image") String image) {
 
-		showroom.setName(name);
-		showroom.setDescription(desc);
-		showroom.setAddress(address);
-		showroom.setLocation(location);
-		showroom.setPhone(phone);
-		showroom.setImage(image);
-		return showroom;
+		ShowRoom showroom = new ShowRoom(showroomID, name, desc, address, location, phone, image);
+
+		ShowRoomBean sb = new ShowRoomBean();
+		return sb.updateShowRoom(showroom);
+	}
+
+	@POST
+	@Path("/deleteShowroom")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteShowRoom(@FormParam("id") int showroomID) {
+
+		ShowRoomBean sb = new ShowRoomBean();
+		return sb.deleteShowRoom(showroomID);
 	}
 
 	/*************************** Category *********************************/
-
+	/*************************** Category *********************************/
 	@POST
 	@Path("/addCategory")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addCategory(@FormParam("name") String name, @FormParam("desc") String desc) {
 
-		Category category = createCategory(name, desc);
+		Category category = new Category(0, name, desc);
 
 		CategoryBean cb = new CategoryBean();
 		category = cb.addCategory(category);
@@ -113,15 +124,27 @@ public class VendorServices {
 		return JSONBuilder.convertCategoryToJSON(category).toJSONString();
 	}
 
-	private Category createCategory(String name, String desc) {
+	@POST
+	@Path("/updateCategory")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateCategory(@FormParam("id") int categoryID, @FormParam("name") String name,
+			@FormParam("desc") String desc) {
 
-		Category category = new Category();
+		Category category = new Category(categoryID, name, desc);
 
-		category.setName(name);
-		category.setDescription(desc);
-		return category;
+		CategoryBean cb = new CategoryBean();
+		return cb.updateCategory(category);
 	}
 
+	@POST
+	@Path("/deleteCategory")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteCategory(@FormParam("id") int categoryID) {
+		CategoryBean cb = new CategoryBean();
+		return cb.deleteCategory(categoryID);
+	}
+
+	/*************************** Brand *********************************/
 	/*************************** Brand *********************************/
 
 	@POST
@@ -130,7 +153,7 @@ public class VendorServices {
 	public String addBrand(@FormParam("name") String name, @FormParam("desc") String desc,
 			@FormParam("image") String image) {
 
-		Brand brand = createBrand(name, desc, image);
+		Brand brand = new Brand(0, name, desc, image);
 
 		BrandBean bb = new BrandBean();
 		brand = bb.addBrand(brand);
@@ -138,14 +161,26 @@ public class VendorServices {
 		return JSONBuilder.convertBrandToJSON(brand).toJSONString();
 	}
 
-	private Brand createBrand(String name, String desc, String image) {
+	@POST
+	@Path("/updateBrand")
+	@Produces(MediaType.TEXT_PLAIN)
 
-		Brand brand = new Brand();
+	public String updateBrand(@FormParam("id") int brandID, @FormParam("name") String name,
+			@FormParam("desc") String desc, @FormParam("image") String image) {
 
-		brand.setName(name);
-		brand.setDescription(desc);
-		brand.setImage(image);
-		return brand;
+		Brand brand = new Brand(brandID, name, desc, image);
+
+		BrandBean bb = new BrandBean();
+		return bb.updateBrand(brand);
+	}
+
+	@POST
+	@Path("/deleteBrand")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateBrand(@FormParam("id") int brandID) {
+
+		BrandBean bb = new BrandBean();
+		return bb.deleteBrand(brandID);
 	}
 
 	/*************************** Catalog *********************************/
@@ -156,7 +191,7 @@ public class VendorServices {
 	public String addCatalog(@FormParam("name") String name, @FormParam("desc") String desc,
 			@FormParam("date") Timestamp date, @FormParam("pdfLink") String pdfLink) {
 
-		Catalog catalog = createCatalog(name, desc, date, pdfLink);
+		Catalog catalog = new Catalog(0, name, desc, date, pdfLink);
 
 		CatalogBean cb = new CatalogBean();
 		catalog = cb.addCatalog(catalog);
@@ -164,16 +199,24 @@ public class VendorServices {
 		return JSONBuilder.convertCatalogToJSON(catalog).toJSONString();
 	}
 
-	private Catalog createCatalog(String name, String desc, Timestamp date, String pdfLink) {
+	@POST
+	@Path("/updateCatalog")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateCatalog(@FormParam("id") int catalogID, @FormParam("name") String name,
+			@FormParam("desc") String desc, @FormParam("date") Timestamp date, @FormParam("pdfLink") String pdfLink) {
 
-		Catalog catalog = new Catalog();
+		Catalog catalog = new Catalog(catalogID, name, desc, date, pdfLink);
 
-		catalog.setName(name);
-		catalog.setDescription(desc);
-		catalog.setDate(date);
-		catalog.setPdfLink(pdfLink);
-
-		return catalog;
+		CatalogBean cb = new CatalogBean();
+		return cb.updateCatalog(catalog);
 	}
 
+	@POST
+	@Path("/deleteCatalog")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteCatalog(@FormParam("id") int catalogID) {
+
+		CatalogBean cb = new CatalogBean();
+		return cb.deleteCatalog(catalogID);
+	}
 }

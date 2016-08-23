@@ -81,4 +81,47 @@ public class BrandBean {
 
 	}
 
+	public String updateBrand(Brand brand) {
+		try {
+			String sql = "UPDATE `brand` SET `name`=?,`desc`=?,`image`=? WHERE `brand_id`=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, brand.getName());
+			stmt.setString(2, brand.getDescription());
+			stmt.setString(3, brand.getImage());
+			stmt.setInt(4, brand.getBrandID());
+
+			stmt.executeUpdate();
+			return "true";
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteBrand(int brandID) {
+		try {
+			String sql = "DELETE FROM `brand` WHERE `brand_id` = ?";
+
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, brandID);
+			stmt.executeUpdate();
+
+			return "true";
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
 }

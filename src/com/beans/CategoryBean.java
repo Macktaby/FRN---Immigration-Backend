@@ -72,12 +72,51 @@ public class CategoryBean {
 				return category;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return null;
 
+	}
+
+	public String updateCategory(Category category) {
+		try {
+			String sql = "UPDATE `category` SET `name`=?,`desc`=? WHERE `category_id`=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, category.getName());
+			stmt.setString(2, category.getDescription());
+			stmt.setInt(3, category.getCategoryID());
+
+			stmt.executeUpdate();
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteCategory(int categoryID) {
+		try {
+			String sql = "DELETE FROM `category` WHERE `category_id` = ?";
+
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, categoryID);
+			stmt.executeUpdate();
+
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
 	}
 
 }

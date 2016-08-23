@@ -14,7 +14,7 @@ public class Category {
 		this.description = "";
 	}
 
-	public Category(int categoryID, String name, String description, String image) {
+	public Category(int categoryID, String name, String description) {
 		this.categoryID = categoryID;
 		this.name = name;
 		this.description = description;

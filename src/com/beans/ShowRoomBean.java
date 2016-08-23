@@ -58,8 +58,8 @@ public class ShowRoomBean {
 
 	public ShowRoom addShowRoom(ShowRoom showroom) {
 		try {
-			String sql = "INSERT INTO `showroom` (`name`, `desc`, `address`, `location`, `phone`, `image`) "
-					+ "VALUES " + "(?,?,?,?,?,?);";
+			String sql = "INSERT INTO `showroom` (`name`, `desc`, `address`, `location`,"
+					+ " `phone`, `image`) VALUES (?,?,?,?,?,?);";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -80,11 +80,54 @@ public class ShowRoomBean {
 				return showroom;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return null;
 	}
 
+	public String updateShowRoom(ShowRoom showroom) {
+		try {
+			String sql = "UPDATE `showroom` SET `name`=?,`desc`=?,`address`=?,"
+					+ "`location`=?,`phone`=?,`image`=? WHERE `showroom_id`=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, showroom.getName());
+			stmt.setString(2, showroom.getDescription());
+			stmt.setString(3, showroom.getAddress());
+			stmt.setString(4, showroom.getLocation());
+			stmt.setString(5, showroom.getPhone());
+			stmt.setString(6, showroom.getImage());
+			stmt.setInt(7, showroom.getShowRoomID());
+
+			stmt.executeUpdate();
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteShowRoom(int showroomID) {
+		try {
+			String sql = "DELETE FROM `showroom` WHERE `showroom_id` = ?";
+
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, showroomID);
+			stmt.executeUpdate();
+
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
 }

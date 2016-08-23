@@ -75,11 +75,52 @@ public class CatalogBean {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return null;
+	}
+
+	public String updateCatalog(Catalog catalog) {
+		try {
+			String sql = "UPDATE `catalog` SET `name`=?,`desc`=?,`date`=?,`pdf`=? WHERE `catalog_id`=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, catalog.getName());
+			stmt.setString(2, catalog.getDescription());
+			stmt.setTimestamp(3, catalog.getDate());
+			stmt.setString(4, catalog.getPdfLink());
+			stmt.setInt(5, catalog.getCatalogID());
+
+			stmt.executeUpdate();
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteCatalog(int catalogID) {
+		try {
+			String sql = "DELETE FROM `catalog` WHERE `catalog_id` = ?";
+
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, catalogID);
+			stmt.executeUpdate();
+
+			return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
 	}
 
 }

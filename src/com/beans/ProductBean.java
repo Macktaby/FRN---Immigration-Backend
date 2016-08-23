@@ -198,10 +198,67 @@ public class ProductBean {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
 
 		return null;
+	}
+
+	public String updateProduct(Product product) {
+
+		try {
+			String sql = "UPDATE `product` SET `name`=?, `desc`=?, `image`=?, `quantity`=?, `price`=?, `rating`=?,"
+					+ "`n_ratings`=?, `is_day_prod`=?, `category_id`=?, `showroom_id`=?, `brand_id`=?, "
+					+ "`category_name` = ?,`showroom_name` = ?,`brand_name` = ? " + "WHERE `product_id`= ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, product.getName());
+			stmt.setString(2, product.getDescription());
+			stmt.setString(3, product.getImage());
+			stmt.setInt(4, product.getQuantity());
+			stmt.setDouble(5, product.getPrice());
+			stmt.setDouble(6, product.getRating());
+			stmt.setInt(7, product.getNumRatingUsers());
+			stmt.setBoolean(8, product.isDayProd());
+			stmt.setInt(9, product.getCategoryID());
+			stmt.setInt(10, product.getShowRoomID());
+			stmt.setInt(11, product.getBrandID());
+			stmt.setString(12, product.getCategoryName());
+			stmt.setString(13, product.getShowRoomName());
+			stmt.setString(14, product.getBrandName());
+			stmt.setInt(15, product.getProductID());
+
+			stmt.executeUpdate();
+			return "true";
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteProduct(int productID) {
+		
+		try {
+			String sql = "DELETE FROM `product` WHERE `product_id` = ?";
+
+			PreparedStatement stmt;
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, productID);
+			stmt.executeUpdate();
+
+			return "true";
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return "false";
 	}
 
 }
