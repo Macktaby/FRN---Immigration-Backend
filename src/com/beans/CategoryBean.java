@@ -76,7 +76,6 @@ public class CategoryBean {
 		}
 
 		return null;
-
 	}
 
 	public String updateCategory(Category category) {

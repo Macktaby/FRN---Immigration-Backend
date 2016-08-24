@@ -19,12 +19,12 @@ public class UserBean {
 	}
 
 	public User addUser(String userName, String password, String nickName, String email, String website, String phone,
-			boolean isAdmin) {
+			boolean isAdmin, String location) {
 
 		try {
 			String sql = "Insert into user (`user_name`, `password`, `nicename`, `email`, `url`, "
-					+ "`phone`, `register_time`, `activation_key`, `status`, `is_admin`)"
-					+ "VALUES  ( ? , ? , ? , ? , ? , ?  ,? , ? , ? , ? )";
+					+ "`phone`, `register_time`, `activation_key`, `status`, `is_admin`, `location`)"
+					+ "VALUES  ( ? , ? , ? , ? , ? , ?  ,? , ? , ? , ? , ? )";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -42,6 +42,7 @@ public class UserBean {
 			stmt.setString(8, "");
 			stmt.setString(9, "");
 			stmt.setBoolean(10, isAdmin);
+			stmt.setString(11, location);
 			stmt.executeUpdate();
 
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -59,13 +60,12 @@ public class UserBean {
 				user.setActivationKey("");
 				user.setUserStatus("");
 				user.setAdmin(isAdmin);
+				user.setLocation(location);
 
 				return user;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
 
 		return null;
@@ -95,12 +95,12 @@ public class UserBean {
 				user.setActivationKey(rs.getString("activation_key"));
 				user.setUserStatus(rs.getString("status"));
 				user.setAdmin(rs.getBoolean("is_admin"));
+				user.setLocation(rs.getString("location"));
 
 				return user;
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

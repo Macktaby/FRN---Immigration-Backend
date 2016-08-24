@@ -11,6 +11,7 @@ public class User {
 	private String email;
 	private String website;
 	private String phone;
+	private String location;
 	private Timestamp registerTime;
 	private String activationKey;
 	private String userStatus;
@@ -28,11 +29,12 @@ public class User {
 		activationKey = "";
 		userStatus = "";
 		isAdmin = false;
-
+		location = "";
 	}
 
 	public User(int userID, String userName, String password, String nickName, String email, String website,
-			String phone, Timestamp registerTime, String activationKey, String userStatus, boolean isAdmin) {
+			String phone, Timestamp registerTime, String activationKey, String userStatus, boolean isAdmin,
+			String location) {
 		this.userID = userID;
 		this.userName = userName;
 		this.password = password;
@@ -44,6 +46,7 @@ public class User {
 		this.activationKey = activationKey;
 		this.userStatus = userStatus;
 		this.isAdmin = isAdmin;
+		this.location = location;
 	}
 
 	public int getUserID() {
@@ -132,6 +135,14 @@ public class User {
 
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getLocation() {
+		return location;
 	}
 
 }

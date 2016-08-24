@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import com.models.User;
 import com.mysql.jdbc.Statement;
 
-public class House {
+public class HouseBean {
 
 	private Connection conn;
 
-	public House() {
+	public HouseBean() {
 		conn = DBConnection.getActiveConnection();
 	}
 

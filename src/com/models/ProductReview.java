@@ -2,20 +2,22 @@ package com.models;
 
 public class ProductReview {
 
+	private int reviewID;
 	private int productID;
 	private int userID;
 	private String review;
 	private int rating;
 
-
 	public ProductReview() {
+		this.reviewID = 0;
 		this.productID = 0;
 		this.userID = 0;
 		this.review = "";
 		this.rating = 0;
 	}
-	
-	public ProductReview(int productID, int userID, String review, int rating) {
+
+	public ProductReview(int reviewID, int productID, int userID, String review, int rating) {
+		this.reviewID = reviewID;
 		this.productID = productID;
 		this.userID = userID;
 		this.review = review;
@@ -52,6 +54,14 @@ public class ProductReview {
 
 	public void setRating(int rating) {
 		this.rating = rating;
+	}
+
+	public int getReviewID() {
+		return reviewID;
+	}
+
+	public void setReviewID(int reviewID) {
+		this.reviewID = reviewID;
 	}
 
 }

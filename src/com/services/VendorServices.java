@@ -13,11 +13,15 @@ import com.beans.BrandBean;
 import com.beans.CatalogBean;
 import com.beans.CategoryBean;
 import com.beans.ProductBean;
+import com.beans.PromotionLocationBean;
+import com.beans.PromotionWishlistBean;
 import com.beans.ShowRoomBean;
 import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
 import com.models.Product;
+import com.models.PromotionLocation;
+import com.models.PromotionWishlist;
 import com.models.ShowRoom;
 
 @Path("/admin")
@@ -58,7 +62,9 @@ public class VendorServices {
 				categoryName, showroomID, showroomName, brandID, brandName);
 
 		ProductBean pb = new ProductBean();
-		return pb.updateProduct(product);
+		String state = pb.updateProduct(product);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
@@ -66,7 +72,8 @@ public class VendorServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteProduct(@FormParam("id") int productID) {
 		ProductBean pb = new ProductBean();
-		return pb.deleteProduct(productID);
+		String state = pb.deleteProduct(productID);
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	/*************************** ShowRoom *********************************/
@@ -97,7 +104,9 @@ public class VendorServices {
 		ShowRoom showroom = new ShowRoom(showroomID, name, desc, address, location, phone, image);
 
 		ShowRoomBean sb = new ShowRoomBean();
-		return sb.updateShowRoom(showroom);
+		String state = sb.updateShowRoom(showroom);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
@@ -106,11 +115,13 @@ public class VendorServices {
 	public String deleteShowRoom(@FormParam("id") int showroomID) {
 
 		ShowRoomBean sb = new ShowRoomBean();
-		return sb.deleteShowRoom(showroomID);
+		String state = sb.deleteShowRoom(showroomID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	/*************************** Category *********************************/
-	/*************************** Category *********************************/
+
 	@POST
 	@Path("/addCategory")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -133,18 +144,22 @@ public class VendorServices {
 		Category category = new Category(categoryID, name, desc);
 
 		CategoryBean cb = new CategoryBean();
-		return cb.updateCategory(category);
+		String state = cb.updateCategory(category);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
 	@Path("/deleteCategory")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String deleteCategory(@FormParam("id") int categoryID) {
+
 		CategoryBean cb = new CategoryBean();
-		return cb.deleteCategory(categoryID);
+		String state = cb.deleteCategory(categoryID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
-	/*************************** Brand *********************************/
 	/*************************** Brand *********************************/
 
 	@POST
@@ -171,7 +186,8 @@ public class VendorServices {
 		Brand brand = new Brand(brandID, name, desc, image);
 
 		BrandBean bb = new BrandBean();
-		return bb.updateBrand(brand);
+		String state = bb.updateBrand(brand);
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
@@ -180,7 +196,9 @@ public class VendorServices {
 	public String updateBrand(@FormParam("id") int brandID) {
 
 		BrandBean bb = new BrandBean();
-		return bb.deleteBrand(brandID);
+		String state = bb.deleteBrand(brandID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	/*************************** Catalog *********************************/
@@ -208,7 +226,8 @@ public class VendorServices {
 		Catalog catalog = new Catalog(catalogID, name, desc, date, pdfLink);
 
 		CatalogBean cb = new CatalogBean();
-		return cb.updateCatalog(catalog);
+		String state = cb.updateCatalog(catalog);
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
@@ -217,6 +236,50 @@ public class VendorServices {
 	public String deleteCatalog(@FormParam("id") int catalogID) {
 
 		CatalogBean cb = new CatalogBean();
-		return cb.deleteCatalog(catalogID);
+		String state = cb.deleteCatalog(catalogID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
+
+	/*************************** Promotions *********************************/
+
+	@POST
+	@Path("/addLocationPromotion")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addLocationPromotion(@FormParam("productID") int productID, @FormParam("location") String location,
+			@FormParam("discount") int discount, @FormParam("start") Timestamp start, @FormParam("end") Timestamp end) {
+
+		PromotionLocation promotion = new PromotionLocation(0, discount, start, end, productID, location);
+
+		PromotionLocationBean plb = new PromotionLocationBean();
+		promotion = plb.addLocationPromotion(promotion);
+
+		return JSONBuilder.convertLocationPromotionToJSON(promotion).toJSONString();
+	}
+
+	@POST
+	@Path("/deleteLocationPromotion")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteLocationPromotion(@FormParam("promotionID") int promotionID) {
+
+		PromotionLocationBean plb = new PromotionLocationBean();
+		String state = plb.deleteLocationPromotion(promotionID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/addWishlistPromotion")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addWishlistPromotion(@FormParam("productID") int productID, @FormParam("location") String location,
+			@FormParam("discount") int discount, @FormParam("start") Timestamp start, @FormParam("end") Timestamp end) {
+
+		PromotionWishlist promotion = new PromotionWishlist(0, discount, start, end, productID);
+
+		PromotionWishlistBean pwb = new PromotionWishlistBean();
+		String state = pwb.addWishlistPromotion(promotion);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
 }

@@ -13,8 +13,10 @@ import com.beans.BrandBean;
 import com.beans.CatalogBean;
 import com.beans.CategoryBean;
 import com.beans.DesignerBean;
+import com.beans.FavoriteProductBean;
 import com.beans.ProductBean;
 import com.beans.ProductImagesBean;
+import com.beans.ProductReviewBean;
 import com.beans.ShowRoomBean;
 import com.beans.SponsorBean;
 import com.beans.UserBean;
@@ -22,7 +24,9 @@ import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
+import com.models.FavoriteProduct;
 import com.models.Product;
+import com.models.ProductReview;
 import com.models.ShowRoom;
 import com.models.Sponsor;
 import com.models.User;
@@ -47,10 +51,10 @@ public class UserServices {
 	public String signup(@FormParam("uname") String userName, @FormParam("pass") String password,
 			@FormParam("nickname") String nickName, @FormParam("email") String email,
 			@FormParam("website") String website, @FormParam("phone") String phone,
-			@FormParam("isAdmin") Boolean isAdmin) {
+			@FormParam("isAdmin") Boolean isAdmin, @FormParam("location") String location) {
 
 		UserBean ub = new UserBean();
-		User user = ub.addUser(userName, password, nickName, email, website, phone, isAdmin);
+		User user = ub.addUser(userName, password, nickName, email, website, phone, isAdmin, location);
 
 		return JSONBuilder.convertUserToJSON(user).toJSONString();
 	}
@@ -161,6 +165,46 @@ public class UserServices {
 		ArrayList<String> images = pb.getProductImages(productID);
 
 		return JSONBuilder.convertImagesToJSON(images).toJSONString();
+	}
+
+	@POST
+	@Path("/addProductReview")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addProductReview(@FormParam("userID") int userID, @FormParam("productID") int productID,
+			@FormParam("review") String review, @FormParam("rating") int rating) {
+
+		ProductReview pr = new ProductReview(0, productID, userID, review, rating);
+
+		ProductReviewBean prb = new ProductReviewBean();
+		pr = prb.addReview(pr);
+
+		return JSONBuilder.convertProductReviewToJSON(pr).toJSONString();
+	}
+
+	@POST
+	@Path("/addFavorite")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addFavorite(@FormParam("userID") int userID, @FormParam("productID") int productID) {
+
+		FavoriteProduct fp = new FavoriteProduct(0, productID, userID);
+
+		FavoriteProductBean fpb = new FavoriteProductBean();
+		String state = fpb.addFavorite(fp);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/removeFavorite")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String removeFavorite(@FormParam("userID") int userID, @FormParam("productID") int productID) {
+
+		FavoriteProduct fp = new FavoriteProduct(0, productID, userID);
+
+		FavoriteProductBean fpb = new FavoriteProductBean();
+		String state = fpb.removeFavorite(fp);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	/************************ ShowRoom Tab ************************/

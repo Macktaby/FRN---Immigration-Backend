@@ -10,6 +10,9 @@ import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
 import com.models.Product;
+import com.models.ProductReview;
+import com.models.PromotionLocation;
+import com.models.PromotionWishlist;
 import com.models.ShowRoom;
 import com.models.Sponsor;
 import com.models.User;
@@ -17,6 +20,15 @@ import com.models.User;
 public class JSONBuilder {
 
 	/************************ JSON Build Functions ************************/
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertStateToJSON(String state) {
+
+		JSONObject json = new JSONObject();
+		json.put("state", state);
+
+		return json;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static JSONObject convertUserToJSON(User user) {
@@ -36,6 +48,7 @@ public class JSONBuilder {
 			json.put("actKey", user.getActivationKey());
 			json.put("status", user.getUserStatus());
 			json.put("isAdmin", user.isAdmin());
+			json.put("location", user.getLocation());
 		}
 
 		return json;
@@ -321,6 +334,62 @@ public class JSONBuilder {
 			json.put("rating", designer.getRating());
 			json.put("nRating", designer.getnRatingUsers());
 			json.put("image", designer.getProfileImage());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertProductReviewToJSON(ProductReview pr) {
+
+		JSONObject json = new JSONObject();
+
+		if (pr == null)
+			json.put("state", "false");
+		else {
+
+			json.put("reviewID", pr.getReviewID());
+			json.put("userID", pr.getUserID());
+			json.put("productID", pr.getProductID());
+			json.put("review", pr.getReview());
+			json.put("rating", pr.getRating());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertLocationPromotionToJSON(PromotionLocation promotion) {
+		JSONObject json = new JSONObject();
+
+		if (promotion == null)
+			json.put("state", "false");
+		else {
+
+			json.put("id", promotion.getPromotionID());
+			json.put("location", promotion.getLocation());
+			json.put("productID", promotion.getProductID());
+			json.put("discount", promotion.getDiscount());
+			json.put("start", promotion.getStartTime().toString());
+			json.put("end", promotion.getEndTime().toString());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertWishlistPromotionToJSON(PromotionWishlist promotion) {
+		JSONObject json = new JSONObject();
+
+		if (promotion == null)
+			json.put("state", "false");
+		else {
+
+			json.put("id", promotion.getPromotionID());
+			json.put("productID", promotion.getProductID());
+			json.put("discount", promotion.getDiscount());
+			json.put("start", promotion.getStartTime().toString());
+			json.put("end", promotion.getEndTime().toString());
 		}
 
 		return json;
