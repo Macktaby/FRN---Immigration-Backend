@@ -1,28 +1,29 @@
 package com.models;
 
-import java.sql.Timestamp;
-
 public class Catalog {
 
 	private int catalogID;
 	private String name;
 	private String description;
-	private Timestamp date;
+	private String month;
+	private int year;
 	private String pdfLink;
-	
+
 	public Catalog() {
 		this.catalogID = 0;
 		this.name = "";
 		this.description = "";
-		this.date = new Timestamp(0);
+		this.month = "";
+		this.year = 0;
 		this.pdfLink = "";
 	}
 
-	public Catalog(int catalogID, String name, String description, Timestamp date, String pdfLink) {
+	public Catalog(int catalogID, String name, String description, String month, int year, String pdfLink) {
 		this.catalogID = catalogID;
 		this.name = name;
 		this.description = description;
-		this.date = date;
+		this.month = month;
+		this.year = year;
 		this.pdfLink = pdfLink;
 	}
 
@@ -58,12 +59,20 @@ public class Catalog {
 		this.pdfLink = pdfLink;
 	}
 
-	public Timestamp getDate() {
-		return date;
+	public String getMonth() {
+		return month;
 	}
 
-	public void setDate(Timestamp date) {
-		this.date = date;
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
 	}
 
 }

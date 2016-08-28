@@ -207,9 +207,9 @@ public class VendorServices {
 	@Path("/addCatalog")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addCatalog(@FormParam("name") String name, @FormParam("desc") String desc,
-			@FormParam("date") Timestamp date, @FormParam("pdfLink") String pdfLink) {
+			@FormParam("month") String month, @FormParam("year") int year, @FormParam("pdfLink") String pdfLink) {
 
-		Catalog catalog = new Catalog(0, name, desc, date, pdfLink);
+		Catalog catalog = new Catalog(0, name, desc, month, year, pdfLink);
 
 		CatalogBean cb = new CatalogBean();
 		catalog = cb.addCatalog(catalog);
@@ -221,9 +221,10 @@ public class VendorServices {
 	@Path("/updateCatalog")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateCatalog(@FormParam("id") int catalogID, @FormParam("name") String name,
-			@FormParam("desc") String desc, @FormParam("date") Timestamp date, @FormParam("pdfLink") String pdfLink) {
+			@FormParam("desc") String desc, @FormParam("month") String month, @FormParam("year") int year,
+			@FormParam("pdfLink") String pdfLink) {
 
-		Catalog catalog = new Catalog(catalogID, name, desc, date, pdfLink);
+		Catalog catalog = new Catalog(catalogID, name, desc, month, year, pdfLink);
 
 		CatalogBean cb = new CatalogBean();
 		String state = cb.updateCatalog(catalog);
@@ -277,7 +278,26 @@ public class VendorServices {
 		PromotionWishlist promotion = new PromotionWishlist(0, discount, start, end, productID);
 
 		PromotionWishlistBean pwb = new PromotionWishlistBean();
-		String state = pwb.addWishlistPromotion(promotion);
+		promotion = pwb.addWishlistPromotion(promotion);
+
+		if (promotion == null)
+			return JSONBuilder.convertStateToJSON("Error adding promotion").toJSONString();
+
+		String state = pwb.addPromotionUsers(promotion.getPromotionID(), discount, productID);
+
+		if (state.equals("true"))
+			return JSONBuilder.convertWishlistPromotionToJSON(promotion).toJSONString();
+
+		return JSONBuilder.convertStateToJSON("Error adding promotion to users").toJSONString();
+	}
+
+	@POST
+	@Path("/deleteWishlistPromotion")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteWishlistPromotion(@FormParam("promotionID") int promotionID) {
+
+		PromotionWishlistBean plb = new PromotionWishlistBean();
+		String state = plb.deleteWishlistPromotion(promotionID);
 
 		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}

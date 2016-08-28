@@ -17,9 +17,7 @@ public class PromotionWishlistBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
-	public String addWishlistPromotion(PromotionWishlist promotion) {
-
-		ArrayList<Integer> userIDs = new FavoriteProductBean().getFavoriteUsers(promotion.getProductID());
+	public PromotionWishlist addWishlistPromotion(PromotionWishlist promotion) {
 
 		try {
 			String sql = "INSERT INTO `promotion_wishlist`"
@@ -40,37 +38,41 @@ public class PromotionWishlistBean {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return "false";
+			return null;
 		}
+		return promotion;
+	}
+
+	public String addPromotionUsers(int promotionID, int discount, int productID) {
+
+		ArrayList<Integer> userIDs = new FavoriteProductBean().getFavoriteUsers(productID);
 
 		// INSERT PROMOTION FOR USERS
+
 		for (int userID : userIDs) {
 			try {
-				String sql = "INSERT INTO `promotion_wishlist`"
-						+ " (`discount`,`start_time`,`end_time`,`product_id`) VALUES (?,?,?,?)";
+				String sql = "INSERT INTO `promotion_wishlist_users`"
+						+ " (`promotion_id`,`discount`,`user_id`,`product_id`) VALUES (?,?,?,?)";
 
 				PreparedStatement stmt;
 				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-				stmt.setInt(1, promotion.getDiscount());
-				stmt.setTimestamp(2, promotion.getStartTime());
-				stmt.setTimestamp(3, promotion.getEndTime());
-				stmt.setInt(4, promotion.getProductID());
+				stmt.setInt(1, promotionID);
+				stmt.setInt(2, discount);
+				stmt.setInt(3, userID);
+				stmt.setInt(4, productID);
 				stmt.setInt(5, userID);
 
 				stmt.executeUpdate();
-				ResultSet rs = stmt.getGeneratedKeys();
-				if (rs.next()) {
-					promotion.setPromotionID(rs.getInt(1));
-				}
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 				return "false";
 			}
-
 		}
 
 		return "true";
+
 	}
 
 	public String deleteWishlistPromotion(int promotionID) {

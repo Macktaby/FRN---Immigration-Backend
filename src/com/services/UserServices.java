@@ -14,9 +14,12 @@ import com.beans.CatalogBean;
 import com.beans.CategoryBean;
 import com.beans.DesignerBean;
 import com.beans.FavoriteProductBean;
+import com.beans.HouseBean;
 import com.beans.ProductBean;
 import com.beans.ProductImagesBean;
 import com.beans.ProductReviewBean;
+import com.beans.ReportBean;
+import com.beans.ReservationBean;
 import com.beans.ShowRoomBean;
 import com.beans.SponsorBean;
 import com.beans.UserBean;
@@ -25,8 +28,11 @@ import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
 import com.models.FavoriteProduct;
+import com.models.House;
 import com.models.Product;
 import com.models.ProductReview;
+import com.models.Report;
+import com.models.Reservation;
 import com.models.ShowRoom;
 import com.models.Sponsor;
 import com.models.User;
@@ -96,6 +102,17 @@ public class UserServices {
 		return JSONBuilder.convertCatalogsToJSON(catalogs).toJSONString();
 	}
 
+	@POST
+	@Path("/searchCatalogs")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String searchCatalogs(@FormParam("catalogName") String catalogName) {
+
+		CatalogBean cb = new CatalogBean();
+		ArrayList<Catalog> catalogs = cb.searchProducts(catalogName);
+
+		return JSONBuilder.convertCatalogsToJSON(catalogs).toJSONString();
+	}
+
 	/*************************** Products Tab *********************************/
 
 	@POST
@@ -107,17 +124,6 @@ public class UserServices {
 		ArrayList<Product> products = pb.getAllProducts();
 
 		return JSONBuilder.convertProductsToJSON(products).toJSONString();
-	}
-
-	@POST
-	@Path("/getShowRooms")
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getShowrooms() {
-
-		ShowRoomBean sb = new ShowRoomBean();
-		ArrayList<ShowRoom> showrooms = sb.getShowRooms();
-
-		return JSONBuilder.convertShowRoomsToJSON(showrooms).toJSONString();
 	}
 
 	@POST
@@ -168,6 +174,72 @@ public class UserServices {
 	}
 
 	@POST
+	@Path("getProductQuantity")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getProductQuantity(@FormParam("productID") int productID) {
+
+		ProductBean pb = new ProductBean();
+		int quantity = pb.getProductQuantity(productID);
+
+		return JSONBuilder.convertQuantityToJSON(quantity).toJSONString();
+	}
+
+	@POST
+	@Path("reserveProduct")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String reserveProduct(@FormParam("productID") int productID, @FormParam("userID") int userID,
+			@FormParam("quantity") int quantity, @FormParam("userName") String userName,
+			@FormParam("productName") String productName) {
+
+		ProductBean pb = new ProductBean();
+		String state = pb.reserveProductQuantity(productID, quantity);
+
+		if (state.equals("true")) {
+			Reservation reservation = new Reservation(0, userID, productID, quantity);
+			ReservationBean reservationBean = new ReservationBean();
+			reservation = reservationBean.addReservation(reservation);
+
+			if (reservation != null) {
+				Report report = new Report(0, "reserve", userID, userName, productID, productName, 0, "");
+				ReportBean rb = new ReportBean();
+				report = rb.addReport(report);
+			}
+
+			return JSONBuilder.convertReservationToJSON(reservation).toJSONString();
+		}
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("cancelReservation")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String cancelReservation(@FormParam("reservationID") int reservationID,
+			@FormParam("productID") int productID, @FormParam("userID") int userID,
+			@FormParam("productName") String productName, @FormParam("userName") String userName) {
+
+		ReservationBean reservationBean = new ReservationBean();
+		int quantity = reservationBean.getReservationQuantity(reservationID);
+		String state = reservationBean.cancelReservation(reservationID, quantity);
+
+		if (state.equals("true")) {
+			ProductBean pb = new ProductBean();
+			String state2 = pb.addProductQuantity(productID, quantity);
+
+			if (state2.equals("true")) {
+				Report report = new Report(0, "cancel", userID, userName, productID, productName, 0, "");
+				ReportBean rb = new ReportBean();
+				report = rb.addReport(report);
+				return JSONBuilder.convertReportToJSON(report).toJSONString();
+			}
+
+			return JSONBuilder.convertStateToJSON(state2).toJSONString();
+		}
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
 	@Path("/addProductReview")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addProductReview(@FormParam("userID") int userID, @FormParam("productID") int productID,
@@ -209,7 +281,6 @@ public class UserServices {
 
 	/************************ ShowRoom Tab ************************/
 
-	// TODO TO BE specified LATER
 	@POST
 	@Path("getShowRoomProducts")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -219,10 +290,34 @@ public class UserServices {
 		ArrayList<Product> products = pb.getFilteredProducts(0, 0, showRoomID);
 
 		return JSONBuilder.convertProductsToJSON(products).toJSONString();
+	}
 
+	/************************ ShowRooms Tab ************************/
+
+	@POST
+	@Path("/getShowRooms")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getShowrooms() {
+
+		ShowRoomBean sb = new ShowRoomBean();
+		ArrayList<ShowRoom> showrooms = sb.getShowRooms();
+
+		return JSONBuilder.convertShowRoomsToJSON(showrooms).toJSONString();
+	}
+
+	@POST
+	@Path("searchShowrooms")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String searchShowrooms(@FormParam("name") String name) {
+
+		ShowRoomBean shb = new ShowRoomBean();
+		ArrayList<ShowRoom> showrooms = shb.searchShowRooms(name);
+
+		return JSONBuilder.convertShowRoomsToJSON(showrooms).toJSONString();
 	}
 
 	/************************ Designer Tab ************************/
+
 	@POST
 	@Path("/getDesigners")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -244,6 +339,49 @@ public class UserServices {
 
 		return JSONBuilder.convertDesignersToJSON(designers).toJSONString();
 	}
+
+	@POST
+	@Path("/contactDesigner")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String contactDesigner(@FormParam("userID") int userID, @FormParam("designerID") int designerID,
+			@FormParam("userName") String userName, @FormParam("designerName") String designerName) {
+
+		Report report = new Report(0, "contact", userID, userName, 0, "", designerID, designerName);
+		ReportBean rb = new ReportBean();
+		report = rb.addReport(report);
+
+		return JSONBuilder.convertReportToJSON(report).toJSONString();
+	}
+
+	/************************ Houses Tab ************************/
+	
+	// TODO TO BE DONE
+	
+	@POST
+	@Path("/getHouses")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getHouses() {
+
+		HouseBean hb = new HouseBean();
+		ArrayList<House> houses = hb.getHouses();
+
+		return JSONBuilder.convertHousesToJSON(houses).toJSONString();
+	}
+
+	@POST
+	@Path("/searchHouses")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String searchHouses(@FormParam("name") String name) {
+
+		DesignerBean pb = new DesignerBean();
+		ArrayList<Designer> designers = pb.getFilteredDesigners(name);
+
+		return JSONBuilder.convertDesignersToJSON(designers).toJSONString();
+	}
+
+	
+
+	/************************ For test ONLY ************************/
 
 	@GET
 	@Path("/")

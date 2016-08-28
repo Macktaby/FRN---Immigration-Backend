@@ -17,6 +17,20 @@ public class CatalogBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
+	private Catalog parseCatalog(ResultSet rs) throws SQLException {
+
+		Catalog catalog = new Catalog();
+
+		catalog.setCatalogID(rs.getInt("catalog_id"));
+		catalog.setName(rs.getString("name"));
+		catalog.setDescription(rs.getString("desc"));
+		catalog.setMonth(rs.getString("month"));
+		catalog.setYear(rs.getInt("year"));
+		catalog.setPdfLink(rs.getString("pdf"));
+
+		return catalog;
+	}
+
 	public ArrayList<Catalog> getCatalogs() {
 
 		try {
@@ -40,31 +54,20 @@ public class CatalogBean {
 		return null;
 	}
 
-	private Catalog parseCatalog(ResultSet rs) throws SQLException {
-
-		Catalog catalog = new Catalog();
-
-		catalog.setCatalogID(rs.getInt("catalog_id"));
-		catalog.setName(rs.getString("name"));
-		catalog.setDescription(rs.getString("desc"));
-		catalog.setDate(rs.getTimestamp("date"));
-		catalog.setPdfLink(rs.getString("pdf"));
-
-		return catalog;
-	}
-
 	public Catalog addCatalog(Catalog catalog) {
 
 		try {
-			String sql = "INSERT INTO `catalog` (`name`, `desc`, `date`, `pdf`) VALUES (?,?,?,?);";
+			String sql = "INSERT INTO `catalog` (`name`, `desc`, `month`, `year`, `pdf`) "
+					+ "VALUES ( ? , ? , ? , ? , ? );";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			stmt.setString(1, catalog.getName());
 			stmt.setString(2, catalog.getDescription());
-			stmt.setTimestamp(3, catalog.getDate());
-			stmt.setString(4, catalog.getPdfLink());
+			stmt.setString(3, catalog.getMonth());
+			stmt.setInt(4, catalog.getYear());
+			stmt.setString(5, catalog.getPdfLink());
 
 			stmt.executeUpdate();
 
@@ -83,16 +86,17 @@ public class CatalogBean {
 
 	public String updateCatalog(Catalog catalog) {
 		try {
-			String sql = "UPDATE `catalog` SET `name`=?,`desc`=?,`date`=?,`pdf`=? WHERE `catalog_id`=?";
+			String sql = "UPDATE `catalog` SET `name`=?,`desc`=?,`month`=?,`year`=?,`pdf`=? WHERE `catalog_id`=?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setString(1, catalog.getName());
 			stmt.setString(2, catalog.getDescription());
-			stmt.setTimestamp(3, catalog.getDate());
-			stmt.setString(4, catalog.getPdfLink());
-			stmt.setInt(5, catalog.getCatalogID());
+			stmt.setString(3, catalog.getMonth());
+			stmt.setInt(4, catalog.getYear());
+			stmt.setString(5, catalog.getPdfLink());
+			stmt.setInt(6, catalog.getCatalogID());
 
 			stmt.executeUpdate();
 			return "true";
@@ -121,6 +125,29 @@ public class CatalogBean {
 		}
 
 		return "false";
+	}
+
+	public ArrayList<Catalog> searchProducts(String name) {
+		try {
+			String sql = "SELECT * FROM catalog WHERE name LIKE ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, "%" + name + "%");
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<Catalog> catalogs = new ArrayList<Catalog>();
+
+			while (rs.next())
+				catalogs.add(parseCatalog(rs));
+
+			return catalogs;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

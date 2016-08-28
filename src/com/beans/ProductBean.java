@@ -241,12 +241,12 @@ public class ProductBean {
 	}
 
 	public String deleteProduct(int productID) {
-		
+
 		try {
 			String sql = "DELETE FROM `product` WHERE `product_id` = ?";
 
 			PreparedStatement stmt;
-			
+
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, productID);
 			stmt.executeUpdate();
@@ -254,11 +254,77 @@ public class ProductBean {
 			return "true";
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return "false";
+	}
+
+	public int getProductQuantity(int productID) {
+		try {
+			String sql = "SELECT quantity FROM product WHERE product_id = ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, productID);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next())
+				return rs.getInt("quantity");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return -1;
+	}
+
+	public String reserveProductQuantity(int productID, int quantity) {
+
+		int productQuantity = getProductQuantity(productID);
+
+		if (productQuantity < quantity)
+			return "Available quantity NOW is " + productQuantity;
+
+		try {
+			String sql = "UPDATE `product` SET `quantity`=? WHERE `product_id`= ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, productQuantity - quantity);
+
+			stmt.executeUpdate();
+
+			return "true";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String addProductQuantity(int productID, int quantity) {
+
+		int productQuantity = getProductQuantity(productID);
+
+		try {
+			String sql = "UPDATE `product` SET `quantity`=? WHERE `product_id`= ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, productQuantity + quantity);
+
+			stmt.executeUpdate();
+
+			return "true";
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+
 	}
 
 }

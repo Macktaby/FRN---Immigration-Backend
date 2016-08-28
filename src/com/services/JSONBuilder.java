@@ -9,10 +9,13 @@ import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
+import com.models.House;
 import com.models.Product;
 import com.models.ProductReview;
 import com.models.PromotionLocation;
 import com.models.PromotionWishlist;
+import com.models.Report;
+import com.models.Reservation;
 import com.models.ShowRoom;
 import com.models.Sponsor;
 import com.models.User;
@@ -166,7 +169,8 @@ public class JSONBuilder {
 			json.put("id", catalog.getCatalogID());
 			json.put("name", catalog.getName());
 			json.put("desc", catalog.getDescription());
-			json.put("date", catalog.getDate().toString());
+			json.put("month", catalog.getMonth());
+			json.put("year", catalog.getYear());
 			json.put("pdf", catalog.getPdfLink());
 		}
 
@@ -393,6 +397,64 @@ public class JSONBuilder {
 		}
 
 		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertQuantityToJSON(int quantity) {
+		JSONObject json = new JSONObject();
+
+		if (quantity < 0)
+			json.put("state", "false");
+		else {
+			json.put("state", "true");
+			json.put("quantity", quantity);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertReservationToJSON(Reservation reservation) {
+		JSONObject json = new JSONObject();
+
+		if (reservation == null)
+			json.put("state", "false");
+		else {
+			json.put("id", reservation.getReservationID());
+			json.put("productID", reservation.getProductID());
+			json.put("userID", reservation.getUserID());
+			json.put("quantity", reservation.getQuantity());
+			json.put("time", reservation.getTime().toString());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertReportToJSON(Report report) {
+		JSONObject json = new JSONObject();
+
+		if (report == null)
+			json.put("state", "false");
+		else {
+			json.put("id", report.getReportID());
+			json.put("type", report.getType());
+			json.put("details", report.getDetails());
+			json.put("time", report.getTime().toString());
+			json.put("userID", report.getUserID());
+			json.put("userName", report.getUserName());
+			json.put("prodID", report.getProductID());
+			json.put("prodName", report.getProductName());
+			json.put("desID", report.getDesignerID());
+			json.put("desName", report.getDesignerName());
+		}
+
+		return json;
+	}
+
+	public static JSONObject convertHousesToJSON(ArrayList<House> houses) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

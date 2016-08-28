@@ -130,4 +130,27 @@ public class ShowRoomBean {
 
 		return "false";
 	}
+
+	public ArrayList<ShowRoom> searchShowRooms(String name) {
+		try {
+			String sql = "SELECT * FROM showroom WHERE name LIKE ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, "%" + name + "%");
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<ShowRoom> showrooms = new ArrayList<ShowRoom>();
+
+			while (rs.next())
+				showrooms.add(parseShowRoom(rs));
+
+			return showrooms;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }
