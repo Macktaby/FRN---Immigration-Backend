@@ -196,7 +196,6 @@ public class ProductBean {
 				return product;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -229,11 +228,11 @@ public class ProductBean {
 			stmt.setString(14, product.getBrandName());
 			stmt.setInt(15, product.getProductID());
 
-			stmt.executeUpdate();
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -249,9 +248,10 @@ public class ProductBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, productID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -294,9 +294,10 @@ public class ProductBean {
 
 			stmt.setInt(1, productQuantity - quantity);
 
-			stmt.executeUpdate();
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
-			return "true";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -89,8 +89,9 @@ public class CategoryBean {
 			stmt.setString(2, category.getDescription());
 			stmt.setInt(3, category.getCategoryID());
 
-			stmt.executeUpdate();
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -107,9 +108,10 @@ public class CategoryBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, categoryID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

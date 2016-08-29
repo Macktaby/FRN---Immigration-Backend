@@ -55,9 +55,10 @@ public class PromotionLocationBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, promotionID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,11 +1,12 @@
 package com.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Designer {
-	
+
 	// 9 used , 1 unused
-	
+
 	private int designerID;
 	private String name;
 	private String email;
@@ -16,7 +17,7 @@ public class Designer {
 	private int nRatingUsers;
 
 	private String profileImage;
-	private ArrayList<String> designs;
+	private List<String> designs;
 
 	public Designer() {
 		this.designerID = 0;
@@ -32,7 +33,8 @@ public class Designer {
 	}
 
 	public Designer(int designerID, String name, String email, String phone, String address, String website,
-			double rating, int nRatingUsers, String profileImage, ArrayList<String> designs) {
+			double rating, int nRatingUsers, String profileImage, List<String> designs) {
+
 		this.designerID = designerID;
 		this.name = name;
 		this.email = email;
@@ -117,11 +119,11 @@ public class Designer {
 		this.profileImage = profileImage;
 	}
 
-	public ArrayList<String> getDesigns() {
+	public List<String> getDesigns() {
 		return designs;
 	}
 
-	public void setDesigns(ArrayList<String> designs) {
+	public void setDesigns(List<String> designs) {
 		this.designs = designs;
 	}
 

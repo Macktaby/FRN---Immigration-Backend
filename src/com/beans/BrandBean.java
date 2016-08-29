@@ -93,11 +93,11 @@ public class BrandBean {
 			stmt.setString(3, brand.getImage());
 			stmt.setInt(4, brand.getBrandID());
 
-			stmt.executeUpdate();
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -112,9 +112,10 @@ public class BrandBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, brandID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

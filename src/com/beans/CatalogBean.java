@@ -98,8 +98,9 @@ public class CatalogBean {
 			stmt.setString(5, catalog.getPdfLink());
 			stmt.setInt(6, catalog.getCatalogID());
 
-			stmt.executeUpdate();
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -116,9 +117,10 @@ public class CatalogBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, catalogID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

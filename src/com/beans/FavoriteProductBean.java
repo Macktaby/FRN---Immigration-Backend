@@ -53,9 +53,9 @@ public class FavoriteProductBean {
 			stmt.setInt(1, fp.getUserID());
 			stmt.setInt(2, fp.getProductID());
 
-			stmt.executeUpdate();
-
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

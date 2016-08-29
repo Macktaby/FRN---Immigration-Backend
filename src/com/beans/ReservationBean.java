@@ -43,7 +43,7 @@ public class ReservationBean {
 
 		return null;
 	}
-	
+
 	public int getReservationQuantity(int reservationID) {
 		try {
 			String sql = "SELECT quantity FROM reservation WHERE reservation_id = ?";
@@ -64,10 +64,10 @@ public class ReservationBean {
 	}
 
 	public String cancelReservation(int reservationID, int quantity) {
-		
-		if(quantity < 0)
+
+		if (quantity < 0)
 			return "Reservation Not Found";
-		
+
 		try {
 			String sql = "DELETE FROM `reservation` WHERE `reservation_id` = ?";
 
@@ -75,9 +75,10 @@ public class ReservationBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, reservationID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

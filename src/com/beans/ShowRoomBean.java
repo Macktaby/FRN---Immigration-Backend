@@ -102,8 +102,9 @@ public class ShowRoomBean {
 			stmt.setString(6, showroom.getImage());
 			stmt.setInt(7, showroom.getShowRoomID());
 
-			stmt.executeUpdate();
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -120,9 +121,10 @@ public class ShowRoomBean {
 
 			stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, showroomID);
-			stmt.executeUpdate();
 
-			return "true";
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();

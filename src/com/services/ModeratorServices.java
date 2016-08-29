@@ -12,20 +12,28 @@ import javax.ws.rs.core.MediaType;
 import com.beans.BrandBean;
 import com.beans.CatalogBean;
 import com.beans.CategoryBean;
+import com.beans.DesignerBean;
+import com.beans.DesignerImagesBean;
+import com.beans.EnvogueBean;
+import com.beans.HouseBean;
 import com.beans.ProductBean;
+import com.beans.ProductImagesBean;
 import com.beans.PromotionLocationBean;
 import com.beans.PromotionWishlistBean;
 import com.beans.ShowRoomBean;
 import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
+import com.models.Designer;
+import com.models.Envogue;
+import com.models.House;
 import com.models.Product;
 import com.models.PromotionLocation;
 import com.models.PromotionWishlist;
 import com.models.ShowRoom;
 
 @Path("/admin")
-public class VendorServices {
+public class ModeratorServices {
 
 	/*************************** Product *********************************/
 
@@ -44,6 +52,9 @@ public class VendorServices {
 
 		ProductBean pb = new ProductBean();
 		product = pb.addProduct(product);
+
+		if (product != null)
+			addProductImages(product.getProductID(), images);
 
 		return JSONBuilder.convertProductToJSON(product).toJSONString();
 	}
@@ -73,6 +84,18 @@ public class VendorServices {
 	public String deleteProduct(@FormParam("id") int productID) {
 		ProductBean pb = new ProductBean();
 		String state = pb.deleteProduct(productID);
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("addProductImages")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addProductImages(@FormParam("productID") int productID,
+			@FormParam("images") List<String> productImages) {
+
+		ProductImagesBean pb = new ProductImagesBean();
+		String state = pb.addProductImages(productID, productImages);
+
 		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
@@ -298,6 +321,145 @@ public class VendorServices {
 
 		PromotionWishlistBean plb = new PromotionWishlistBean();
 		String state = plb.deleteWishlistPromotion(promotionID);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	/*************************** House *********************************/
+
+	@POST
+	@Path("/addHouse")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addHouse(@FormParam("name") String name, @FormParam("desc") String desc,
+			@FormParam("image") String image) {
+
+		House house = new House(0, name, desc, image);
+		HouseBean hb = new HouseBean();
+		house = hb.addHouse(house);
+
+		return JSONBuilder.convertHouseToJSON(house).toJSONString();
+	}
+
+	@POST
+	@Path("/updateHouse")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateHouse(@FormParam("id") int id, @FormParam("name") String name, @FormParam("desc") String desc,
+			@FormParam("image") String image) {
+
+		House house = new House(id, name, desc, image);
+		HouseBean hb = new HouseBean();
+		String state = hb.updateHouse(house);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/deleteHouse")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteHouse(@FormParam("id") int id) {
+
+		HouseBean hb = new HouseBean();
+		String state = hb.deleteHouse(id);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	/*************************** Envogue *********************************/
+
+	@POST
+	@Path("/addEnvogue")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addEnvogue(@FormParam("name") String name, @FormParam("desc") String desc,
+			@FormParam("image") String image) {
+
+		Envogue envogue = new Envogue(0, name, desc, image);
+		EnvogueBean eb = new EnvogueBean();
+		envogue = eb.addEnvogue(envogue);
+
+		return JSONBuilder.convertEnvogueToJSON(envogue).toJSONString();
+	}
+
+	@POST
+	@Path("/updateEnvogue")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateEnvogue(@FormParam("id") int id, @FormParam("name") String name, @FormParam("desc") String desc,
+			@FormParam("image") String image) {
+
+		Envogue envogue = new Envogue(id, name, desc, image);
+		EnvogueBean eb = new EnvogueBean();
+		String state = eb.updateEnvogue(envogue);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/deleteEnvogue")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteEnvogue(@FormParam("id") int id) {
+
+		EnvogueBean eb = new EnvogueBean();
+		String state = eb.deleteEnvogue(id);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	/*************************** Designer *********************************/
+
+	@POST
+	@Path("/addDesigner")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addDesigner(@FormParam("name") String name, @FormParam("email") String email,
+			@FormParam("phone") String phone, @FormParam("address") String address,
+			@FormParam("website") String website, @FormParam("rating") double rating,
+			@FormParam("nRating") int nRatingUsers, @FormParam("image") String image,
+			@FormParam("designs") List<String> designs) {
+
+		Designer designer = new Designer(0, name, email, phone, address, website, rating, nRatingUsers, image, designs);
+		DesignerBean db = new DesignerBean();
+		designer = db.addDesigner(designer);
+
+		if (designer != null)
+			addDesignerImages(designer.getDesignerID(), designs);
+
+		return JSONBuilder.convertDesignerToJSON(designer).toJSONString();
+	}
+
+	@POST
+	@Path("/updateDesigner")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateDesigner(@FormParam("id") int id, @FormParam("name") String name,
+			@FormParam("email") String email, @FormParam("phone") String phone, @FormParam("address") String address,
+			@FormParam("website") String website, @FormParam("rating") double rating,
+			@FormParam("nRating") int nRatingUsers, @FormParam("image") String image,
+			@FormParam("designs") List<String> designs) {
+
+		Designer designer = new Designer(id, name, email, phone, address, website, rating, nRatingUsers, image,
+				designs);
+		DesignerBean db = new DesignerBean();
+		String state = db.updateDesigner(designer);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/deleteDesigner")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String deleteDesigner(@FormParam("id") int id) {
+
+		DesignerBean db = new DesignerBean();
+		String state = db.deleteDesigner(id);
+
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("addDesignerImages")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addDesignerImages(@FormParam("designerID") int designerID,
+			@FormParam("images") List<String> designerImages) {
+
+		DesignerImagesBean db = new DesignerImagesBean();
+		String state = db.addDesignerImages(designerID, designerImages);
 
 		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}

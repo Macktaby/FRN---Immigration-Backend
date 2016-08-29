@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.Designer;
+import com.mysql.jdbc.Statement;
 
 public class DesignerBean {
 
@@ -77,6 +78,88 @@ public class DesignerBean {
 		}
 
 		return null;
+	}
+
+	public Designer addDesigner(Designer designer) {
+		try {
+			String sql = "INSERT INTO `designer`"
+					+ "(`name`, `email`, `address`, `url`, `phone`, `rating`, `n_ratings`, `profile_image`) "
+					+ "VALUES (?,?,?,?,?,?,?,?);";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			stmt.setString(1, designer.getName());
+			stmt.setString(2, designer.getEmail());
+			stmt.setString(3, designer.getAddress());
+			stmt.setString(4, designer.getWebsite());
+			stmt.setString(5, designer.getPhone());
+			stmt.setDouble(6, designer.getRating());
+			stmt.setInt(7, designer.getnRatingUsers());
+			stmt.setString(8, designer.getProfileImage());
+
+			stmt.executeUpdate();
+
+			ResultSet rs = stmt.getGeneratedKeys();
+			if (rs.next()) {
+				designer.setDesignerID(rs.getInt(1));
+
+				return designer;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public String updateDesigner(Designer designer) {
+		try {
+			String sql = "UPDATE `designer` SET `name`=?,`email`=?,`address`=?,`url`=?,`phone`=?,`rating`=?,"
+					+ "`n_ratings`=?,`profile_image`=? WHERE `designer_id`=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setString(1, designer.getName());
+			stmt.setString(2, designer.getEmail());
+			stmt.setString(3, designer.getAddress());
+			stmt.setString(4, designer.getWebsite());
+			stmt.setString(5, designer.getPhone());
+			stmt.setDouble(6, designer.getRating());
+			stmt.setInt(7, designer.getnRatingUsers());
+			stmt.setString(8, designer.getProfileImage());
+			stmt.setInt(9, designer.getDesignerID());
+
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
+	}
+
+	public String deleteDesigner(int id) {
+		try {
+			String sql = "DELETE FROM `designer` WHERE `designer_id` = ?";
+
+			PreparedStatement stmt;
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
 	}
 
 }

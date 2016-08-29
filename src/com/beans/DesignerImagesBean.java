@@ -9,22 +9,22 @@ import java.util.List;
 
 import com.mysql.jdbc.Statement;
 
-public class ProductImagesBean {
+public class DesignerImagesBean {
 
 	private Connection conn;
 
-	public ProductImagesBean() {
+	public DesignerImagesBean() {
 		conn = DBConnection.getActiveConnection();
 	}
 
-	public ArrayList<String> getProductImages(int productID) {
+	public ArrayList<String> getDesignerImages(int designerID) {
 
 		try {
-			String sql = "SELECT * FROM ProductImages WHERE product_id = ?";
+			String sql = "SELECT * FROM designer_images WHERE designer_id = ?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, productID);
+			stmt.setInt(1, designerID);
 			ResultSet rs = stmt.executeQuery();
 
 			ArrayList<String> images = new ArrayList<String>();
@@ -41,16 +41,16 @@ public class ProductImagesBean {
 		return null;
 	}
 
-	public String addProductImages(int productID, List<String> images) {
+	public String addDesignerImages(int designerID, List<String> images) {
 
 		for (String image : images) {
 			try {
-				String sql = "INSERT INTO `product_images`(`product_id`, `image`) VALUES (?, ?)";
+				String sql = "INSERT INTO `designer_images`(`designer_id`, `image`) VALUES (?, ?)";
 
 				PreparedStatement stmt;
 				stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-				stmt.setInt(1, productID);
+				stmt.setInt(1, designerID);
 				stmt.setString(2, image);
 
 				stmt.executeUpdate();

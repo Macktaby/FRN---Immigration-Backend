@@ -9,6 +9,8 @@ import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
+import com.models.DesignerReview;
+import com.models.Envogue;
 import com.models.House;
 import com.models.Product;
 import com.models.ProductReview;
@@ -344,6 +346,25 @@ public class JSONBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
+	public static JSONObject convertProductReviewsToJSON(ArrayList<ProductReview> reviews) {
+
+		JSONObject json = new JSONObject();
+
+		if (reviews == null) {
+			json.put("state", "false");
+		} else {
+
+			JSONArray jsonArr = new JSONArray();
+			for (ProductReview review : reviews)
+				jsonArr.add(convertProductReviewToJSON(review));
+
+			json.put("reviews", jsonArr);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
 	public static JSONObject convertProductReviewToJSON(ProductReview pr) {
 
 		JSONObject json = new JSONObject();
@@ -352,11 +373,46 @@ public class JSONBuilder {
 			json.put("state", "false");
 		else {
 
-			json.put("reviewID", pr.getReviewID());
 			json.put("userID", pr.getUserID());
 			json.put("productID", pr.getProductID());
 			json.put("review", pr.getReview());
 			json.put("rating", pr.getRating());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertDesignerReviewsToJSON(ArrayList<DesignerReview> reviews) {
+
+		JSONObject json = new JSONObject();
+
+		if (reviews == null) {
+			json.put("state", "false");
+		} else {
+
+			JSONArray jsonArr = new JSONArray();
+			for (DesignerReview review : reviews)
+				jsonArr.add(convertDesignerReviewToJSON(review));
+
+			json.put("reviews", jsonArr);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertDesignerReviewToJSON(DesignerReview review) {
+
+		JSONObject json = new JSONObject();
+
+		if (review == null)
+			json.put("state", "false");
+		else {
+			json.put("userID", review.getUserID());
+			json.put("designerID", review.getDesignerID());
+			json.put("review", review.getReview());
+			json.put("rating", review.getRating());
 		}
 
 		return json;
@@ -452,9 +508,72 @@ public class JSONBuilder {
 		return json;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static JSONObject convertHousesToJSON(ArrayList<House> houses) {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json = new JSONObject();
+
+		if (houses == null) {
+			json.put("state", "false");
+		} else {
+
+			JSONArray jsonArr = new JSONArray();
+			for (House house : houses)
+				jsonArr.add(convertHouseToJSON(house));
+
+			json.put("houses", jsonArr);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertHouseToJSON(House house) {
+		JSONObject json = new JSONObject();
+
+		if (house == null)
+			json.put("state", "false");
+		else {
+			json.put("id", house.getHouseID());
+			json.put("name", house.getName());
+			json.put("desc", house.getDescription());
+			json.put("image", house.getImage());
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertEnvoguesToJSON(ArrayList<Envogue> envogues) {
+		JSONObject json = new JSONObject();
+
+		if (envogues == null) {
+			json.put("state", "false");
+		} else {
+
+			JSONArray jsonArr = new JSONArray();
+			for (Envogue envogue : envogues)
+				jsonArr.add(convertEnvogueToJSON(envogue));
+
+			json.put("envogues", jsonArr);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertEnvogueToJSON(Envogue envogue) {
+		JSONObject json = new JSONObject();
+
+		if (envogue == null)
+			json.put("state", "false");
+		else {
+			json.put("id", envogue.getEnvogueID());
+			json.put("name", envogue.getName());
+			json.put("desc", envogue.getDescription());
+			json.put("image", envogue.getImage());
+		}
+
+		return json;
 	}
 
 }

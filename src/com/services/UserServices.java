@@ -13,6 +13,9 @@ import com.beans.BrandBean;
 import com.beans.CatalogBean;
 import com.beans.CategoryBean;
 import com.beans.DesignerBean;
+import com.beans.DesignerImagesBean;
+import com.beans.DesignerReviewBean;
+import com.beans.EnvogueBean;
 import com.beans.FavoriteProductBean;
 import com.beans.HouseBean;
 import com.beans.ProductBean;
@@ -27,6 +30,8 @@ import com.models.Brand;
 import com.models.Catalog;
 import com.models.Category;
 import com.models.Designer;
+import com.models.DesignerReview;
+import com.models.Envogue;
 import com.models.FavoriteProduct;
 import com.models.House;
 import com.models.Product;
@@ -245,12 +250,23 @@ public class UserServices {
 	public String addProductReview(@FormParam("userID") int userID, @FormParam("productID") int productID,
 			@FormParam("review") String review, @FormParam("rating") int rating) {
 
-		ProductReview pr = new ProductReview(0, productID, userID, review, rating);
+		ProductReview pr = new ProductReview(productID, userID, review, rating);
 
 		ProductReviewBean prb = new ProductReviewBean();
 		pr = prb.addReview(pr);
 
 		return JSONBuilder.convertProductReviewToJSON(pr).toJSONString();
+	}
+
+	@POST
+	@Path("/getProductReviews")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getProductReviews(@FormParam("productID") int productID) {
+
+		ProductReviewBean prb = new ProductReviewBean();
+		ArrayList<ProductReview> reviews = prb.getReviews(productID);
+
+		return JSONBuilder.convertProductReviewsToJSON(reviews).toJSONString();
 	}
 
 	@POST
@@ -330,9 +346,9 @@ public class UserServices {
 	}
 
 	@POST
-	@Path("/filterDesigners")
+	@Path("/searchDesigners")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String filterProducts(@FormParam("name") String name) {
+	public String searchProducts(@FormParam("name") String name) {
 
 		DesignerBean pb = new DesignerBean();
 		ArrayList<Designer> designers = pb.getFilteredDesigners(name);
@@ -353,10 +369,44 @@ public class UserServices {
 		return JSONBuilder.convertReportToJSON(report).toJSONString();
 	}
 
+	@POST
+	@Path("getDesignerImages")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getDesignerImages(@FormParam("designerID") int designerID) {
+
+		DesignerImagesBean pb = new DesignerImagesBean();
+		ArrayList<String> images = pb.getDesignerImages(designerID);
+
+		return JSONBuilder.convertImagesToJSON(images).toJSONString();
+	}
+
+	@POST
+	@Path("/addDesignerReview")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addDesignerReview(@FormParam("userID") int userID, @FormParam("designerID") int designerID,
+			@FormParam("review") String review, @FormParam("rating") int rating) {
+
+		DesignerReview dr = new DesignerReview(designerID, userID, review, rating);
+
+		DesignerReviewBean drb = new DesignerReviewBean();
+		dr = drb.addReview(dr);
+
+		return JSONBuilder.convertDesignerReviewToJSON(dr).toJSONString();
+	}
+
+	@POST
+	@Path("/getDesignerReviews")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getDesignerReviews(@FormParam("designerID") int designerID) {
+
+		DesignerReviewBean drb = new DesignerReviewBean();
+		ArrayList<DesignerReview> reviews = drb.getReviews(designerID);
+
+		return JSONBuilder.convertDesignerReviewsToJSON(reviews).toJSONString();
+	}
+
 	/************************ Houses Tab ************************/
-	
-	// TODO TO BE DONE
-	
+
 	@POST
 	@Path("/getHouses")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -373,13 +423,35 @@ public class UserServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String searchHouses(@FormParam("name") String name) {
 
-		DesignerBean pb = new DesignerBean();
-		ArrayList<Designer> designers = pb.getFilteredDesigners(name);
+		HouseBean hb = new HouseBean();
+		ArrayList<House> houses = hb.searchHouses(name);
 
-		return JSONBuilder.convertDesignersToJSON(designers).toJSONString();
+		return JSONBuilder.convertHousesToJSON(houses).toJSONString();
 	}
 
-	
+	/************************ Envogues Tab ************************/
+
+	@POST
+	@Path("/getEnvogues")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getEnvogues() {
+
+		EnvogueBean eb = new EnvogueBean();
+		ArrayList<Envogue> envogues = eb.getEnvogues();
+
+		return JSONBuilder.convertEnvoguesToJSON(envogues).toJSONString();
+	}
+
+	@POST
+	@Path("/searchEnvogues")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String searchEnvogues(@FormParam("name") String name) {
+
+		EnvogueBean eb = new EnvogueBean();
+		ArrayList<Envogue> envogues = eb.searchEnvogues(name);
+
+		return JSONBuilder.convertEnvoguesToJSON(envogues).toJSONString();
+	}
 
 	/************************ For test ONLY ************************/
 
