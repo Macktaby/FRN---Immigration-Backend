@@ -295,10 +295,13 @@ public class ModeratorServices {
 	@POST
 	@Path("/addWishlistPromotion")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String addWishlistPromotion(@FormParam("productID") int productID, @FormParam("location") String location,
-			@FormParam("discount") int discount, @FormParam("start") Timestamp start, @FormParam("end") Timestamp end) {
+	public String addWishlistPromotion(
+			@FormParam("productID") int productID, 
+			@FormParam("discount") int discount, 
+			@FormParam("start") Timestamp start, 
+			@FormParam("end") Timestamp end) {
 
-		PromotionWishlist promotion = new PromotionWishlist(0, discount, start, end, productID);
+		PromotionWishlist promotion = new PromotionWishlist(0, discount, start, end, productID, 0);
 
 		PromotionWishlistBean pwb = new PromotionWishlistBean();
 		promotion = pwb.addWishlistPromotion(promotion);
@@ -311,7 +314,7 @@ public class ModeratorServices {
 		if (state.equals("true"))
 			return JSONBuilder.convertWishlistPromotionToJSON(promotion).toJSONString();
 
-		return JSONBuilder.convertStateToJSON("Error adding promotion to users").toJSONString();
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST

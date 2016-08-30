@@ -17,6 +17,19 @@ public class PromotionWishlistBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
+	private PromotionWishlist parsePromotionWishlistUser(ResultSet rs) throws SQLException {
+
+		PromotionWishlist promotion = new PromotionWishlist();
+
+		promotion.setPromotionID(rs.getInt("promotion_id"));
+		promotion.setProductID(rs.getInt("product_id"));
+		promotion.setDiscount(rs.getInt("discount"));
+		promotion.setUserID(rs.getInt("user_id"));
+
+		return promotion;
+
+	}
+
 	public PromotionWishlist addWishlistPromotion(PromotionWishlist promotion) {
 
 		try {
@@ -61,13 +74,13 @@ public class PromotionWishlistBean {
 				stmt.setInt(2, discount);
 				stmt.setInt(3, userID);
 				stmt.setInt(4, productID);
-				stmt.setInt(5, userID);
 
 				stmt.executeUpdate();
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return "false";
+				return e.toString();
+				// return "false";
 			}
 		}
 
@@ -94,6 +107,32 @@ public class PromotionWishlistBean {
 		}
 
 		return "false";
+	}
+
+	public PromotionWishlist getPromotion(int productID, int userID) {
+		try {
+			String sql = "SELECT * FROM promotion_wishlist_users WHERE product_id=? AND user_id=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, productID);
+			stmt.setInt(2, userID);
+
+			ResultSet rs = stmt.executeQuery();
+
+			PromotionWishlist promotion = null;
+
+			if (rs.next())
+				promotion = parsePromotionWishlistUser(rs);
+
+			return promotion;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 }

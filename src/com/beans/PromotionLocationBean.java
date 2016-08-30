@@ -16,6 +16,20 @@ public class PromotionLocationBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
+	private PromotionLocation parsePromotionLocation(ResultSet rs) throws SQLException {
+
+		PromotionLocation promotion = new PromotionLocation();
+
+		promotion.setPromotionID(rs.getInt("promotion_id"));
+		promotion.setProductID(rs.getInt("product_id"));
+		promotion.setDiscount(rs.getInt("discount"));
+		promotion.setStartTime(rs.getTimestamp("start_time"));
+		promotion.setEndTime(rs.getTimestamp("end_time"));
+		promotion.setLocation(rs.getString("location"));
+
+		return promotion;
+	}
+
 	public PromotionLocation addLocationPromotion(PromotionLocation promotion) {
 		try {
 			String sql = "INSERT INTO `promotion_location`"
@@ -65,6 +79,34 @@ public class PromotionLocationBean {
 		}
 
 		return "false";
+
+	}
+
+	public PromotionLocation getPromotion(int productID, String location) {
+
+		try {
+			String sql = "SELECT * FROM promotion_location WHERE product_id=? AND location=?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, productID);
+			stmt.setString(2, location);
+
+			ResultSet rs = stmt.executeQuery();
+
+			PromotionLocation promotion = null;
+
+			if (rs.next())
+				promotion = parsePromotionLocation(rs);
+
+			return promotion;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 
 	}
 

@@ -9,6 +9,7 @@ public class PromotionWishlist {
 	private Timestamp startTime;
 	private Timestamp endTime;
 	private int productID;
+	private int userID;
 
 	public PromotionWishlist() {
 		this.promotionID = 0;
@@ -16,14 +17,17 @@ public class PromotionWishlist {
 		this.startTime = new Timestamp(0);
 		this.endTime = new Timestamp(0);
 		this.productID = 0;
+		this.userID = 0;
 	}
 
-	public PromotionWishlist(int promotionID, int discount, Timestamp startTime, Timestamp endTime, int productID) {
+	public PromotionWishlist(int promotionID, int discount, Timestamp startTime, Timestamp endTime, int productID,
+			int userID) {
 		this.promotionID = promotionID;
 		this.discount = discount;
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.productID = productID;
+		this.userID = userID;
 	}
 
 	public int getPromotionID() {
@@ -64,6 +68,14 @@ public class PromotionWishlist {
 
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
+	}
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public void setUserID(int userID) {
+		this.userID = userID;
 	}
 
 }

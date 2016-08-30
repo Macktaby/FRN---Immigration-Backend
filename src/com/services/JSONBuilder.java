@@ -576,4 +576,18 @@ public class JSONBuilder {
 		return json;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertPriceToJSON(double price) {
+		JSONObject json = new JSONObject();
+
+		if (price < 0)
+			json.put("state", "false");
+		else {
+			json.put("state", "true");
+			json.put("price", price);
+		}
+
+		return json;
+	}
+
 }

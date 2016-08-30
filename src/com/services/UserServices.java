@@ -3,7 +3,6 @@ package com.services;
 import java.util.ArrayList;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,6 +20,8 @@ import com.beans.HouseBean;
 import com.beans.ProductBean;
 import com.beans.ProductImagesBean;
 import com.beans.ProductReviewBean;
+import com.beans.PromotionLocationBean;
+import com.beans.PromotionWishlistBean;
 import com.beans.ReportBean;
 import com.beans.ReservationBean;
 import com.beans.ShowRoomBean;
@@ -36,6 +37,8 @@ import com.models.FavoriteProduct;
 import com.models.House;
 import com.models.Product;
 import com.models.ProductReview;
+import com.models.PromotionLocation;
+import com.models.PromotionWishlist;
 import com.models.Report;
 import com.models.Reservation;
 import com.models.ShowRoom;
@@ -295,6 +298,29 @@ public class UserServices {
 		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
+	@POST
+	@Path("/getProductPrice")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getProductPriceForCertainUser(@FormParam("productID") int productID, @FormParam("userID") int userID,
+			@FormParam("location") String location, @FormParam("price") double price) {
+
+		PromotionLocationBean promLocBean = new PromotionLocationBean();
+		PromotionWishlistBean promWishlistBean = new PromotionWishlistBean();
+
+		PromotionLocation locationPromotion = promLocBean.getPromotion(productID, location);
+		PromotionWishlist wishlistPromotion = promWishlistBean.getPromotion(productID, userID);
+
+		int discount = 0;
+		if (locationPromotion != null)
+			discount += locationPromotion.getDiscount();
+		if (wishlistPromotion != null)
+			discount += wishlistPromotion.getDiscount();
+
+		price -= ((discount) * 0.01 * price);
+
+		return JSONBuilder.convertPriceToJSON(price).toJSONString();
+	}
+
 	/************************ ShowRoom Tab ************************/
 
 	@POST
@@ -455,7 +481,7 @@ public class UserServices {
 
 	/************************ For test ONLY ************************/
 
-	@GET
+	@POST
 	@Path("/")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getJson() {
