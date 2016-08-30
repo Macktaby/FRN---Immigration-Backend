@@ -79,8 +79,7 @@ public class PromotionWishlistBean {
 
 			} catch (SQLException e) {
 				e.printStackTrace();
-				return e.toString();
-				// return "false";
+				return "false";
 			}
 		}
 
