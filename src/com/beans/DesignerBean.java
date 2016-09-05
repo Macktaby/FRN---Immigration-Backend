@@ -115,8 +115,8 @@ public class DesignerBean {
 
 	public String updateDesigner(Designer designer) {
 		try {
-			String sql = "UPDATE `designer` SET `name`=?,`email`=?,`address`=?,`url`=?,`phone`=?,`rating`=?,"
-					+ "`n_ratings`=?,`profile_image`=? WHERE `designer_id`=?";
+			String sql = "UPDATE `designer` SET `name`=?,`email`=?,`address`=?,`url`=?,`phone`=?,"
+					+ ",`profile_image`=? WHERE `designer_id`=?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);
@@ -126,10 +126,8 @@ public class DesignerBean {
 			stmt.setString(3, designer.getAddress());
 			stmt.setString(4, designer.getWebsite());
 			stmt.setString(5, designer.getPhone());
-			stmt.setDouble(6, designer.getRating());
-			stmt.setInt(7, designer.getnRatingUsers());
-			stmt.setString(8, designer.getProfileImage());
-			stmt.setInt(9, designer.getDesignerID());
+			stmt.setString(6, designer.getProfileImage());
+			stmt.setInt(7, designer.getDesignerID());
 
 			int nRows = stmt.executeUpdate();
 			if (nRows == 1)

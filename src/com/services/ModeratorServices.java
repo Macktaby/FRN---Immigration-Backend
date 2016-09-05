@@ -419,16 +419,15 @@ public class ModeratorServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addDesigner(@FormParam("name") String name, @FormParam("email") String email,
 			@FormParam("phone") String phone, @FormParam("address") String address,
-			@FormParam("website") String website, @FormParam("rating") double rating,
-			@FormParam("nRating") int nRatingUsers, @FormParam("image") String image,
+			@FormParam("website") String website, @FormParam("image") String image,
 			@FormParam("designs") List<String> designs) {
 
-		Designer designer = new Designer(0, name, email, phone, address, website, rating, nRatingUsers, image, designs);
+		Designer designer = new Designer(0, name, email, phone, address, website, 0.0, 0, image, designs);
 		DesignerBean db = new DesignerBean();
 		designer = db.addDesigner(designer);
 
 		if (designer != null)
-			addDesignerImages(designer.getDesignerID(), designs);
+			addDesignerDesigns(designer.getDesignerID(), designs);
 
 		return JSONBuilder.convertDesignerToJSON(designer).toJSONString();
 	}
@@ -438,12 +437,9 @@ public class ModeratorServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateDesigner(@FormParam("id") int id, @FormParam("name") String name,
 			@FormParam("email") String email, @FormParam("phone") String phone, @FormParam("address") String address,
-			@FormParam("website") String website, @FormParam("rating") double rating,
-			@FormParam("nRating") int nRatingUsers, @FormParam("image") String image,
-			@FormParam("designs") List<String> designs) {
+			@FormParam("website") String website, @FormParam("image") String image) {
 
-		Designer designer = new Designer(id, name, email, phone, address, website, rating, nRatingUsers, image,
-				designs);
+		Designer designer = new Designer(id, name, email, phone, address, website, 0.0, 0, image, null);
 		DesignerBean db = new DesignerBean();
 		String state = db.updateDesigner(designer);
 
@@ -462,9 +458,9 @@ public class ModeratorServices {
 	}
 
 	@POST
-	@Path("addDesignerImages")
+	@Path("addDesignerDesigns")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String addDesignerImages(@FormParam("designerID") int designerID,
+	public String addDesignerDesigns(@FormParam("designerID") int designerID,
 			@FormParam("images") List<String> designerImages) {
 
 		DesignerImagesBean db = new DesignerImagesBean();
