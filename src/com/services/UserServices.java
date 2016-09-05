@@ -65,10 +65,10 @@ public class UserServices {
 	public String signup(@FormParam("uname") String userName, @FormParam("pass") String password,
 			@FormParam("nickname") String nickName, @FormParam("email") String email,
 			@FormParam("website") String website, @FormParam("phone") String phone,
-			@FormParam("isAdmin") Boolean isAdmin, @FormParam("location") String location) {
+			@FormParam("location") String location) {
 
 		UserBean ub = new UserBean();
-		User user = ub.addUser(userName, password, nickName, email, website, phone, isAdmin, location);
+		User user = ub.addUser(userName, password, nickName, email, website, phone, false, location);
 
 		return JSONBuilder.convertUserToJSON(user).toJSONString();
 	}
@@ -396,9 +396,9 @@ public class UserServices {
 	}
 
 	@POST
-	@Path("getDesignerImages")
+	@Path("getDesignerDesigns")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getDesignerImages(@FormParam("designerID") int designerID) {
+	public String getDesignerDesigns(@FormParam("designerID") int designerID) {
 
 		DesignerImagesBean pb = new DesignerImagesBean();
 		ArrayList<String> images = pb.getDesignerImages(designerID);

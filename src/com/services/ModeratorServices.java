@@ -88,7 +88,16 @@ public class ModeratorServices {
 	}
 
 	@POST
-	@Path("addProductImages")
+	@Path("/addDayProduct")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String addDayProduct(@FormParam("id") int productID) {
+		ProductBean pb = new ProductBean();
+		String state = pb.addDayProduct(productID);
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
+	}
+
+	@POST
+	@Path("/addProductImages")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addProductImages(@FormParam("productID") int productID,
 			@FormParam("images") List<String> productImages) {
@@ -295,11 +304,8 @@ public class ModeratorServices {
 	@POST
 	@Path("/addWishlistPromotion")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String addWishlistPromotion(
-			@FormParam("productID") int productID, 
-			@FormParam("discount") int discount, 
-			@FormParam("start") Timestamp start, 
-			@FormParam("end") Timestamp end) {
+	public String addWishlistPromotion(@FormParam("productID") int productID, @FormParam("discount") int discount,
+			@FormParam("start") Timestamp start, @FormParam("end") Timestamp end) {
 
 		PromotionWishlist promotion = new PromotionWishlist(0, discount, start, end, productID, 0);
 

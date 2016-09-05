@@ -293,6 +293,7 @@ public class ProductBean {
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, productQuantity - quantity);
+			stmt.setInt(2, productID);
 
 			int nRows = stmt.executeUpdate();
 			if (nRows == 1)
@@ -316,16 +317,38 @@ public class ProductBean {
 			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, productQuantity + quantity);
+			stmt.setInt(2, productID);
 
-			stmt.executeUpdate();
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
 
-			return "true";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return "false";
+	}
 
+	public String addDayProduct(int productID) {
+		try {
+			String sql = "UPDATE `product` SET `is_day_prod`=? WHERE `product_id`= ?";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setBoolean(1, true);
+			stmt.setInt(2, productID);
+
+			int nRows = stmt.executeUpdate();
+			if (nRows == 1)
+				return "true";
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return "false";
 	}
 
 }
