@@ -49,7 +49,7 @@ public class JSONBuilder {
 			json.put("email", user.getEmail());
 			json.put("website", user.getWebsite());
 			json.put("phone", user.getPhone());
-			json.put("regTime", user.getRegisterTime());
+			json.put("regTime", user.getRegisterTime().toString());
 			json.put("actKey", user.getActivationKey());
 			json.put("status", user.getUserStatus());
 			json.put("isAdmin", user.isAdmin());
