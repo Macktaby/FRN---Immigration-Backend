@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.FavoriteProduct;
-import com.mysql.jdbc.Statement;
 
 public class FavoriteProductBean {
 
@@ -22,20 +21,15 @@ public class FavoriteProductBean {
 			String sql = "INSERT INTO `wishlist`(`user_id`, `product_id`, `time`) VALUES (?,?,?)";
 
 			PreparedStatement stmt;
-			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, fp.getUserID());
 			stmt.setInt(2, fp.getProductID());
 			stmt.setTimestamp(3, fp.getTime());
 
 			stmt.executeUpdate();
+			return "true";
 
-			ResultSet rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
-				fp.setWishlistID(rs.getInt(1));
-
-				return "true";
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

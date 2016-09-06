@@ -75,7 +75,7 @@ public class Report {
 
 	public String getDetails() {
 
-		if (type.equals("reservre"))
+		if (type.equals("reserve"))
 			details = "User " + userName + " reserved product " + productName;
 		else if (type.equals("cancel"))
 			details = "User " + userName + " canceled reservation for product " + productName;

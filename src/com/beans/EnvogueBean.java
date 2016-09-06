@@ -53,7 +53,7 @@ public class EnvogueBean {
 
 	public ArrayList<Envogue> searchEnvogues(String name) {
 		try {
-			String sql = "SELECT * FROM houses WHERE name LIKE ?";
+			String sql = "SELECT * FROM envogue WHERE name LIKE ?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);

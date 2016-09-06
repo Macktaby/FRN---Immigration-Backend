@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.models.DesignerReview;
-import com.mysql.jdbc.Statement;
 
 public class DesignerReviewBean {
 
@@ -34,7 +33,7 @@ public class DesignerReviewBean {
 		try {
 			String sql = "INSERT INTO `designer_reviews` "
 					+ "(`designer_id`, `user_id`, `review`, `rating`) VALUES (?,?,?,?)";
-			PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement stmt = conn.prepareStatement(sql);
 
 			stmt.setInt(1, pr.getDesignerID());
 			stmt.setInt(2, pr.getUserID());
@@ -42,6 +41,7 @@ public class DesignerReviewBean {
 			stmt.setInt(4, pr.getRating());
 
 			stmt.executeUpdate();
+			return pr;
 
 		} catch (SQLException e) {
 			e.printStackTrace();

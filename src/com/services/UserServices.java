@@ -391,7 +391,6 @@ public class UserServices {
 		Report report = new Report(0, "contact", userID, userName, 0, "", designerID, designerName);
 		ReportBean rb = new ReportBean();
 		report = rb.addReport(report);
-
 		return JSONBuilder.convertReportToJSON(report).toJSONString();
 	}
 
