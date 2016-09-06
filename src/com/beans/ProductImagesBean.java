@@ -20,7 +20,7 @@ public class ProductImagesBean {
 	public ArrayList<String> getProductImages(int productID) {
 
 		try {
-			String sql = "SELECT * FROM ProductImages WHERE product_id = ?";
+			String sql = "SELECT * FROM product_images WHERE product_id = ?";
 
 			PreparedStatement stmt;
 			stmt = conn.prepareStatement(sql);

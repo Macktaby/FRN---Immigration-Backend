@@ -295,10 +295,14 @@ public class JSONBuilder {
 
 		JSONObject json = new JSONObject();
 		JSONArray jsonArr = new JSONArray();
-
-		for (String image : images)
-			jsonArr.add(new JSONObject().put("image", image));
-
+		JSONObject imgJSON = new JSONObject();
+		
+		for (String image : images){
+			imgJSON = new JSONObject();
+			imgJSON.put("image", image);
+			jsonArr.add(image);
+		}
+		
 		json.put("images", jsonArr);
 		return json;
 	}
