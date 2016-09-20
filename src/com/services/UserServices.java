@@ -73,6 +73,39 @@ public class UserServices {
 		return JSONBuilder.convertUserToJSON(user).toJSONString();
 	}
 
+	@POST
+	@Path("/getUser")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getUser(@FormParam("userID") int id) {
+
+		UserBean ub = new UserBean();
+		User user = ub.getUserByID(id);
+
+		return JSONBuilder.convertUserToJSON(user).toJSONString();
+	}
+
+	@POST
+	@Path("/getUserReservations")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getUserReservations(@FormParam("userID") int id) {
+
+		ProductBean pb = new ProductBean();
+		ArrayList<Product> products = pb.getUserReservedProducts(id);
+
+		return JSONBuilder.convertProductsToJSON(products).toJSONString();
+	}
+
+	@POST
+	@Path("/getUserWishlist")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String getUserWishlist(@FormParam("userID") int id) {
+
+		ProductBean pb = new ProductBean();
+		ArrayList<Product> products = pb.getUserFavoriteProducts(id);
+
+		return JSONBuilder.convertProductsToJSON(products).toJSONString();
+	}
+
 	/*************************** Home Tab *********************************/
 
 	@POST

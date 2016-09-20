@@ -18,6 +18,25 @@ public class UserBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
+	private User parseUser(ResultSet rs) throws SQLException {
+		User user = new User();
+
+		user.setUserID(rs.getInt("user_id"));
+		user.setUserName(rs.getString("user_name"));
+		user.setPassword(rs.getString("password"));
+		user.setNickName(rs.getString("nicename"));
+		user.setEmail(rs.getString("email"));
+		user.setWebsite(rs.getString("url"));
+		user.setPhone(rs.getString("phone"));
+		user.setRegisterTime(rs.getTimestamp("register_time"));
+		user.setActivationKey(rs.getString("activation_key"));
+		user.setUserStatus(rs.getString("status"));
+		user.setAdmin(rs.getBoolean("is_admin"));
+		user.setLocation(rs.getString("location"));
+
+		return user;
+	}
+
 	public User addUser(String userName, String password, String nickName, String email, String website, String phone,
 			boolean isAdmin, String location) {
 
@@ -82,22 +101,26 @@ public class UserBean {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next()) {
-				User user = new User();
+				return parseUser(rs);
+			}
 
-				user.setUserID(rs.getInt("user_id"));
-				user.setUserName(rs.getString("user_name"));
-				user.setPassword(rs.getString("password"));
-				user.setNickName(rs.getString("nicename"));
-				user.setEmail(rs.getString("email"));
-				user.setWebsite(rs.getString("url"));
-				user.setPhone(rs.getString("phone"));
-				user.setRegisterTime(rs.getTimestamp("register_time"));
-				user.setActivationKey(rs.getString("activation_key"));
-				user.setUserStatus(rs.getString("status"));
-				user.setAdmin(rs.getBoolean("is_admin"));
-				user.setLocation(rs.getString("location"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-				return user;
+		return null;
+	}
+
+	public User getUserByID(int id) {
+		try {
+			String sql = "Select * from user where `user_id` = ?";
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return parseUser(rs);
 			}
 
 		} catch (SQLException e) {

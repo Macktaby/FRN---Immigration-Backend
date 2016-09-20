@@ -58,7 +58,7 @@ public class FavoriteProductBean {
 		return "false";
 	}
 
-	public ArrayList<Integer> getFavoriteUsers(int productID) {
+	public ArrayList<Integer> getFavoriteProductUsers(int productID) {
 		try {
 			String sql = "SELECT `user_id` FROM `wishlist` WHERE `product_id` = ?";
 
@@ -82,5 +82,4 @@ public class FavoriteProductBean {
 
 		return null;
 	}
-
 }

@@ -58,7 +58,7 @@ public class PromotionWishlistBean {
 
 	public String addPromotionUsers(int promotionID, int discount, int productID) {
 
-		ArrayList<Integer> userIDs = new FavoriteProductBean().getFavoriteUsers(productID);
+		ArrayList<Integer> userIDs = new FavoriteProductBean().getFavoriteProductUsers(productID);
 
 		// INSERT PROMOTION FOR USERS
 

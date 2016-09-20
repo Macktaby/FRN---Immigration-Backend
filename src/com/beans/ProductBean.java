@@ -351,4 +351,51 @@ public class ProductBean {
 		return "false";
 	}
 
+	public ArrayList<Product> getUserFavoriteProducts(int id) {
+
+		try {
+			String sql = "SELECT * FROM product, wishlist "
+					+ "WHERE wishlist.user_id=? AND product.product_id = wishlist.product_id";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<Product> products = new ArrayList<Product>();
+
+			while (rs.next())
+				products.add(parseProduct(rs));
+
+			return products;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<Product> getUserReservedProducts(int id) {
+
+		try {
+			String sql = "SELECT * FROM product, reservation "
+					+ "WHERE reservation.user_id=? AND product.product_id = reservation.product_id";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<Product> products = new ArrayList<Product>();
+
+			while (rs.next())
+				products.add(parseProduct(rs));
+
+			return products;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }
