@@ -72,6 +72,18 @@ public class UserServices {
 
 		return JSONBuilder.convertUserToJSON(user).toJSONString();
 	}
+	
+	@POST
+	@Path("/checkEmail")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String checkEmail(@FormParam("email") String email) {
+
+		UserBean ub = new UserBean();
+		Boolean state = ub.checkEmail(email);
+
+		return JSONBuilder.convertStateToJSON(state+"").toJSONString();
+	}
+	
 
 	@POST
 	@Path("/getUser")

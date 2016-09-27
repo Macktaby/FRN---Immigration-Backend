@@ -130,4 +130,23 @@ public class UserBean {
 		return null;
 	}
 
+	public Boolean checkEmail(String email) {
+		try {
+			String sql = "Select * from user where `email` = ?";
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, email);
+			ResultSet rs = stmt.executeQuery();
+
+			if (rs.next()) {
+				return true;
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return false;
+	}
+
 }
