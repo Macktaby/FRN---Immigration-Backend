@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.models.Product;
 import com.mysql.jdbc.Statement;
@@ -83,6 +84,57 @@ public class ProductBean {
 		}
 
 		return null;
+	}
+
+	public ArrayList<Product> filterProductsGroup(List<Integer> brands, List<Integer> categories,
+			List<Integer> showrooms) {
+
+		int i, j , k;
+		ArrayList<Product> products = new ArrayList<Product>();
+
+		i = 0;
+		do {
+			j = 0;
+			do {
+				k = 0;
+				do {
+					int brandID, categoryID, showRoomID;
+					brandID = (brands.size() == 0) ? 0 : brands.get(i);
+					categoryID = (categories.size() == 0) ? 0 : categories.get(j);
+					showRoomID = (showrooms.size() == 0) ? 0 : showrooms.get(k);
+
+					try {
+						int count = 0;
+						boolean selection[] = { false, false, false };
+						String sql = buildFilterSQL(brandID, categoryID, showRoomID, selection);
+
+						PreparedStatement stmt;
+						stmt = conn.prepareStatement(sql);
+
+						if (selection[0])
+							stmt.setInt(++count, brandID);
+						if (selection[1])
+							stmt.setInt(++count, categoryID);
+						if (selection[2])
+							stmt.setInt(++count, showRoomID);
+
+						ResultSet rs = stmt.executeQuery();
+
+						while (rs.next())
+							products.add(parseProduct(rs));
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+						return null;
+					}
+
+				} while (++k < showrooms.size());
+
+			} while (++j < categories.size());
+
+		} while (++i < brands.size());
+
+		return products;
 	}
 
 	public ArrayList<Product> getFilteredProducts(int brandID, int categoryID, int showRoomID) {

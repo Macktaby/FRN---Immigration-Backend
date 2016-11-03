@@ -1,6 +1,7 @@
 package com.services;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -72,7 +73,7 @@ public class UserServices {
 
 		return JSONBuilder.convertUserToJSON(user).toJSONString();
 	}
-	
+
 	@POST
 	@Path("/checkEmail")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -81,9 +82,8 @@ public class UserServices {
 		UserBean ub = new UserBean();
 		Boolean state = ub.checkEmail(email);
 
-		return JSONBuilder.convertStateToJSON(state+"").toJSONString();
+		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
 	}
-	
 
 	@POST
 	@Path("/getUser")
@@ -209,6 +209,18 @@ public class UserServices {
 
 		ProductBean pb = new ProductBean();
 		ArrayList<Product> products = pb.getFilteredProducts(brandID, categoryID, showRoomID);
+
+		return JSONBuilder.convertProductsToJSON(products).toJSONString();
+	}
+
+	@POST
+	@Path("/filterProductsGroup")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String filterProductsGroup(@FormParam("brands") List<Integer> brands,
+			@FormParam("categories") List<Integer> categories, @FormParam("showrooms") List<Integer> showrooms) {
+
+		ProductBean pb = new ProductBean();
+		ArrayList<Product> products = pb.filterProductsGroup(brands, categories, showrooms);
 
 		return JSONBuilder.convertProductsToJSON(products).toJSONString();
 	}
