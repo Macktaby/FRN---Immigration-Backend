@@ -75,12 +75,48 @@ public class UserServices {
 	}
 
 	@POST
+	@Path("/updateProfile")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updateProfile(@FormParam("userID") int id, @FormParam("uname") String userName,
+			@FormParam("pass") String password, @FormParam("nickname") String nickName,
+			@FormParam("email") String email, @FormParam("website") String website, @FormParam("phone") String phone,
+			@FormParam("location") String location) {
+
+		UserBean ub = new UserBean();
+		Boolean state = ub.updateUser(id, userName, password, nickName, email, website, phone, location);
+
+		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
+	}
+
+	@POST
+	@Path("/updatePassword")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String updatePassword(@FormParam("userID") int id, @FormParam("pass") String password) {
+
+		UserBean ub = new UserBean();
+		Boolean state = ub.updatePassword(id, password);
+
+		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
+	}
+
+	@POST
 	@Path("/checkEmail")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String checkEmail(@FormParam("email") String email) {
 
 		UserBean ub = new UserBean();
 		Boolean state = ub.checkEmail(email);
+
+		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
+	}
+
+	@POST
+	@Path("/checkUserName")
+	@Produces(MediaType.TEXT_PLAIN)
+	public String checkUserName(@FormParam("username") String username) {
+
+		UserBean ub = new UserBean();
+		Boolean state = ub.checkUserName(username);
 
 		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
 	}
