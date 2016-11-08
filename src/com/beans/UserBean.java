@@ -168,15 +168,12 @@ public class UserBean {
 		return false;
 	}
 
-	public Boolean updateUser(int id, String userName, String password, String nickName, String email, String website,
+	public Boolean updateUser(int id, String userName, String password, String nickName, String website,
 			String phone, String location) {
 
 		try {
-			if (checkEmail(email))
-				return false;
-
 			String sql = "UPDATE `user` "
-					+ "SET `user_name`=?,`password`=?, `nicename`=?,`location`=?,`email`=?,`url`=?,`phone`=? "
+					+ "SET `user_name`=?,`password`=?, `nicename`=?,`location`=?,,`url`=?,`phone`=? "
 					+ "WHERE `user_id`=?";
 
 			PreparedStatement stmt;
@@ -186,10 +183,9 @@ public class UserBean {
 			stmt.setString(2, password);
 			stmt.setString(3, nickName);
 			stmt.setString(4, location);
-			stmt.setString(5, email);
-			stmt.setString(6, website);
-			stmt.setString(7, phone);
-			stmt.setInt(8, id);
+			stmt.setString(5, website);
+			stmt.setString(6, phone);
+			stmt.setInt(7, id);
 
 			int rows = stmt.executeUpdate();
 

@@ -79,11 +79,11 @@ public class UserServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String updateProfile(@FormParam("userID") int id, @FormParam("uname") String userName,
 			@FormParam("pass") String password, @FormParam("nickname") String nickName,
-			@FormParam("email") String email, @FormParam("website") String website, @FormParam("phone") String phone,
+			@FormParam("website") String website, @FormParam("phone") String phone,
 			@FormParam("location") String location) {
 
 		UserBean ub = new UserBean();
-		Boolean state = ub.updateUser(id, userName, password, nickName, email, website, phone, location);
+		Boolean state = ub.updateUser(id, userName, password, nickName, website, phone, location);
 
 		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
 	}
