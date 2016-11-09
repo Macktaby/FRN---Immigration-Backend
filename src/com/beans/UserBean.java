@@ -168,16 +168,16 @@ public class UserBean {
 		return false;
 	}
 
-	public Boolean updateUser(int id, String userName, String password, String nickName, String website,
+	public String updateUser(int id, String userName, String password, String nickName, String website,
 			String phone, String location) {
 
 		try {
 			String sql = "UPDATE `user` "
-					+ "SET `user_name`=?,`password`=?, `nicename`=?,`location`=?,,`url`=?,`phone`=? "
+					+ "SET `user_name`=?,`password`=?, `nicename`=?,`location`=?,`url`=?,`phone`=? "
 					+ "WHERE `user_id`=?";
 
 			PreparedStatement stmt;
-			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			stmt = conn.prepareStatement(sql , Statement.RETURN_GENERATED_KEYS);
 
 			stmt.setString(1, userName);
 			stmt.setString(2, password);
@@ -190,13 +190,13 @@ public class UserBean {
 			int rows = stmt.executeUpdate();
 
 			if (rows == 1)
-				return true;
+				return "true";
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		return false;
+		return "false";
 	}
 
 	public Boolean updatePassword(int id, String password) {

@@ -83,9 +83,9 @@ public class UserServices {
 			@FormParam("location") String location) {
 
 		UserBean ub = new UserBean();
-		Boolean state = ub.updateUser(id, userName, password, nickName, website, phone, location);
+		String state = ub.updateUser(id, userName, password, nickName, website, phone, location);
 
-		return JSONBuilder.convertStateToJSON(state + "").toJSONString();
+		return JSONBuilder.convertStateToJSON(state).toJSONString();
 	}
 
 	@POST
