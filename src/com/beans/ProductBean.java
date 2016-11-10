@@ -42,6 +42,30 @@ public class ProductBean {
 		return product;
 	}
 
+	private Product parseReservedProduct(ResultSet rs) throws SQLException {
+
+		Product product = new Product();
+
+		product.setProductID(rs.getInt("product.product_id"));
+		product.setName(rs.getString("product.name"));
+		product.setDescription(rs.getString("product.desc"));
+		product.setImage(rs.getString("product.image"));
+		product.setQuantity(rs.getInt("reservation.quantity"));
+		product.setPrice(rs.getDouble("product.price"));
+		product.setRating(rs.getDouble("product.rating"));
+		product.setNumRatingUsers(rs.getInt("product.n_ratings"));
+		product.setDayProd(rs.getBoolean("product.is_day_prod"));
+
+		product.setCategoryID(rs.getInt("product.category_id"));
+		product.setCategoryName(rs.getString("product.category_name"));
+		product.setShowRoomID(rs.getInt("product.showroom_id"));
+		product.setShowRoomName(rs.getString("product.showroom_name"));
+		product.setBrandID(rs.getInt("product.brand_id"));
+		product.setBrandName(rs.getString("product.brand_name"));
+
+		return product;
+	}
+
 	public ArrayList<Product> getProductsOfTheDay() {
 
 		try {
