@@ -53,6 +53,7 @@ public class FavoriteProductBean {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return e.getMessage();
 		}
 
 		return "false";
