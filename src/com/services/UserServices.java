@@ -375,7 +375,7 @@ public class UserServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String addFavorite(@FormParam("userID") int userID, @FormParam("productID") int productID) {
 
-		FavoriteProduct fp = new FavoriteProduct(0, productID, userID);
+		FavoriteProduct fp = new FavoriteProduct(0, userID, productID);
 
 		FavoriteProductBean fpb = new FavoriteProductBean();
 		String state = fpb.addFavorite(fp);
