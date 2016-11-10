@@ -113,7 +113,7 @@ public class ProductBean {
 	public ArrayList<Product> filterProductsGroup(List<Integer> brands, List<Integer> categories,
 			List<Integer> showrooms) {
 
-		int i, j , k;
+		int i, j, k;
 		ArrayList<Product> products = new ArrayList<Product>();
 
 		i = 0;
@@ -465,7 +465,7 @@ public class ProductBean {
 			ArrayList<Product> products = new ArrayList<Product>();
 
 			while (rs.next())
-				products.add(parseProduct(rs));
+				products.add(parseReservedProduct(rs));
 
 			return products;
 		} catch (SQLException e) {
