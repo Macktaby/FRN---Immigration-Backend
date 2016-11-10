@@ -296,13 +296,13 @@ public class JSONBuilder {
 		JSONObject json = new JSONObject();
 		JSONArray jsonArr = new JSONArray();
 		JSONObject imgJSON = new JSONObject();
-		
-		for (String image : images){
+
+		for (String image : images) {
 			imgJSON = new JSONObject();
 			imgJSON.put("image", image);
 			jsonArr.add(image);
 		}
-		
+
 		json.put("images", jsonArr);
 		return json;
 	}
@@ -474,23 +474,6 @@ public class JSONBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static JSONObject convertReservationToJSON(Reservation reservation) {
-		JSONObject json = new JSONObject();
-
-		if (reservation == null)
-			json.put("state", "false");
-		else {
-			json.put("id", reservation.getReservationID());
-			json.put("productID", reservation.getProductID());
-			json.put("userID", reservation.getUserID());
-			json.put("quantity", reservation.getQuantity());
-			json.put("time", reservation.getTime().toString());
-		}
-
-		return json;
-	}
-
-	@SuppressWarnings("unchecked")
 	public static JSONObject convertReportToJSON(Report report) {
 		JSONObject json = new JSONObject();
 
@@ -589,6 +572,43 @@ public class JSONBuilder {
 		else {
 			json.put("state", "true");
 			json.put("price", price);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertReservationsToJSON(ArrayList<Reservation> reservations) {
+		JSONObject json = new JSONObject();
+
+		if (reservations == null)
+			json.put("state", "false");
+		else {
+			JSONArray jsonArr = new JSONArray();
+			for (Reservation reservation : reservations)
+				jsonArr.add(convertReservationToJSON(reservation));
+
+			json.put("state", "true");
+			json.put("reservations", jsonArr);
+		}
+
+		return json;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JSONObject convertReservationToJSON(Reservation reservation) {
+		JSONObject json = new JSONObject();
+
+		if (reservation == null)
+			json.put("state", "false");
+		else {
+			json.put("id", reservation.getReservationID());
+			json.put("reserved_quantity", reservation.getQuantity());
+			json.put("time", reservation.getTime().toString());
+			json.put("userID", reservation.getUserID());
+			json.put("userName", reservation.getUserName());
+
+			json.put("product", convertProductToJSON(reservation.getProduct()));
 		}
 
 		return json;

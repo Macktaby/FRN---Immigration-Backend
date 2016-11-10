@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
-	
+
 	// 15 used, 1 unused
 
 	private int productID;
@@ -66,6 +66,12 @@ public class Product {
 		this.showRoomName = showRoomName;
 		this.brandID = brandID;
 		this.brandName = brandName;
+	}
+
+	public Product(int productID, String productName) {
+		this();
+		this.productID = productID;
+		this.name = productName;
 	}
 
 	public int getProductID() {

@@ -137,10 +137,10 @@ public class UserServices {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getUserReservations(@FormParam("userID") int id) {
 
-		ProductBean pb = new ProductBean();
-		ArrayList<Product> products = pb.getUserReservedProducts(id);
+		ReservationBean rb = new ReservationBean();
+		ArrayList<Reservation> reservations = rb.getUserReservedProducts(id);
 
-		return JSONBuilder.convertProductsToJSON(products).toJSONString();
+		return JSONBuilder.convertReservationsToJSON(reservations).toJSONString();
 	}
 
 	@POST
@@ -296,7 +296,7 @@ public class UserServices {
 		String state = pb.reserveProductQuantity(productID, quantity);
 
 		if (state.equals("true")) {
-			Reservation reservation = new Reservation(0, userID, productID, quantity, userName, productName);
+			Reservation reservation = new Reservation(0, userID, userName, productID, productName, quantity);
 			ReservationBean reservationBean = new ReservationBean();
 			reservation = reservationBean.addReservation(reservation);
 
@@ -331,13 +331,13 @@ public class UserServices {
 
 		// Add reserved quantity of product to available one
 		ProductBean pb = new ProductBean();
-		state = pb.addProductQuantity(reservation.getProductID(), reservation.getQuantity());
+		state = pb.addProductQuantity(reservation.getProduct().getProductID(), reservation.getQuantity());
 		if (!state.equals("true"))
 			return JSONBuilder.convertStateToJSON(state).toJSONString();
 
 		// Add report about reservation cancellation
 		Report report = new Report(0, "cancel", reservation.getUserID(), reservation.getUserName(),
-				reservation.getProductID(), reservation.getProductName(), 0, "");
+				reservation.getProduct().getProductID(), reservation.getProduct().getName(), 0, "");
 		ReportBean rb = new ReportBean();
 		report = rb.addReport(report);
 		if (report == null)

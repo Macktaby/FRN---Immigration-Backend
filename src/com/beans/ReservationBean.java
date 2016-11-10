@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import com.models.Product;
 import com.models.Reservation;
 import com.mysql.jdbc.Statement;
 
@@ -16,18 +18,42 @@ public class ReservationBean {
 		conn = DBConnection.getActiveConnection();
 	}
 
-	public Reservation parseReservationProductUser(ResultSet rs) throws SQLException {
+	public Reservation parseReservation(ResultSet rs) throws SQLException {
 		Reservation reservation = new Reservation();
 
 		reservation.setReservationID(rs.getInt("reservation.reservation_id"));
-		reservation.setUserID(rs.getInt("reservation.user_id"));
-		reservation.setProductID(rs.getInt("reservation.product_id"));
+		reservation.setUserID(rs.getInt("user.user_id"));
+		reservation.setUserName(rs.getString("user.user_name"));
 		reservation.setQuantity(rs.getInt("reservation.quantity"));
 		reservation.setTime(rs.getTimestamp("reservation.time"));
-		reservation.setUserName(rs.getString("user.user_name"));
-		reservation.setProductName(rs.getString("product.name"));
+
+		reservation.setProduct(parseReservedProduct(rs));
 
 		return reservation;
+	}
+
+	private Product parseReservedProduct(ResultSet rs) throws SQLException {
+
+		Product product = new Product();
+
+		product.setProductID(rs.getInt("product.product_id"));
+		product.setName(rs.getString("product.name"));
+		product.setDescription(rs.getString("product.desc"));
+		product.setImage(rs.getString("product.image"));
+		product.setQuantity(rs.getInt("reservation.quantity"));
+		product.setPrice(rs.getDouble("product.price"));
+		product.setRating(rs.getDouble("product.rating"));
+		product.setNumRatingUsers(rs.getInt("product.n_ratings"));
+		product.setDayProd(rs.getBoolean("product.is_day_prod"));
+
+		product.setCategoryID(rs.getInt("product.category_id"));
+		product.setCategoryName(rs.getString("product.category_name"));
+		product.setShowRoomID(rs.getInt("product.showroom_id"));
+		product.setShowRoomName(rs.getString("product.showroom_name"));
+		product.setBrandID(rs.getInt("product.brand_id"));
+		product.setBrandName(rs.getString("product.brand_name"));
+
+		return product;
 	}
 
 	public Reservation addReservation(Reservation reservation) {
@@ -39,7 +65,7 @@ public class ReservationBean {
 			stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 			stmt.setInt(1, reservation.getUserID());
-			stmt.setInt(2, reservation.getProductID());
+			stmt.setInt(2, reservation.getProduct().getProductID());
 			stmt.setInt(3, reservation.getQuantity());
 			stmt.setTimestamp(4, reservation.getTime());
 
@@ -110,8 +136,32 @@ public class ReservationBean {
 			ResultSet rs = stmt.executeQuery();
 
 			if (rs.next())
-				return parseReservationProductUser(rs);
+				return parseReservation(rs);
 
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	public ArrayList<Reservation> getUserReservedProducts(int id) {
+
+		try {
+			String sql = "SELECT * FROM product, reservation, user WHERE reservation.user_id = ? "
+					+ "AND product.product_id = reservation.product_id AND reservation.user_id = user.user_id";
+
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+
+			ArrayList<Reservation> reservations = new ArrayList<Reservation>();
+
+			while (rs.next())
+				reservations.add(parseReservation(rs));
+
+			return reservations;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
